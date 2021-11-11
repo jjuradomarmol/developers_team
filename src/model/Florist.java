@@ -2,13 +2,24 @@ package model;
 
 public class Florist {
 	
+	private static Florist instance;
+	
 	private String name;
 	
 	private Stock stock;
 	
-	public Florist(String name) {
+	private Florist() {}
+	
+	private Florist(String name) {
 		this.name = name;
-		this.stock = new Stock();
+		this.stock = Stock.getInstance();
+	}
+	
+	public static Florist getInstance(String name) {
+		if (instance == null) {
+			instance = new Florist(name);
+		}
+		return instance;
 	}
 
 	public String getName() {

@@ -4,14 +4,23 @@ import java.util.ArrayList;
 
 public class Ticket {
 	
-	private ArrayList<Product> purchase;
+	private static Ticket instance;
 	
-	public Ticket() {
-		this.purchase = new ArrayList<Product>();
+	private ArrayList<Product> purchases;
+	
+	private Ticket() {
+		this.purchases = new ArrayList<Product>();
+	}
+	
+	public static Ticket getInstance() {
+		if (instance == null) {
+			instance = new Ticket();
+		}
+		return instance;
 	}
 	
 	public void addProduct(Product product) {
-		this.purchase.add(product);
+		this.purchases.add(product);
 	}
 	
 	//S'han de poder guardar els tickets a la BBDD

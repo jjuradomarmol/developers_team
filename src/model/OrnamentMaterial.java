@@ -25,5 +25,5 @@ public class OrnamentMaterial {
 	public String getType() {
 		return type;
 	}
-
+	
 }
