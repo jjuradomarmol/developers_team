@@ -10,9 +10,9 @@ public class Ornament extends Product implements Serializable  {
 	private static final long serialVersionUID = 1L;
 	private String material;
 	
-	public Ornament(String name, double price) {
+	public Ornament(String name, double price, String material) {
 		super(name, price);
-		this.material = OrnamentMaterial.getType();
+		this.material = material;
 	}
 
 	public String getMaterial() {

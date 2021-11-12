@@ -96,7 +96,7 @@ public class Stock implements Serializable {
 	public String toString() {
 		String totalArrays = "";
 		
-		totalArrays += "\n¡rboles:\n";
+		totalArrays += "¡rboles:\n";
 		for (Tree tree : treeStock) {
 			totalArrays += tree.toString() + "\n";
 		}

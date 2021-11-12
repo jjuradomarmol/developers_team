@@ -1,6 +1,6 @@
 package model;
 
-public class OrnamentMaterial {
+/*public class OrnamentMaterial {
 	
 	private static OrnamentMaterial instance;
 	public static String type;
@@ -27,4 +27,4 @@ public class OrnamentMaterial {
 		return type;
 	}
 	
-}
+}*/
