@@ -8,7 +8,7 @@ import controller.*;
 
 public class FloristApp {
 
-	public static void main(String[] args) throws IOException, ClassNotFoundException {
+	public static void main(String[] args) throws IOException, ClassNotFoundException, TipoMaterialException {
 		
 	Florist miFloristeria = Florist.getInstance("miFloristeria");
 	
@@ -16,8 +16,7 @@ public class FloristApp {
 	
 	stock.addTree(new Tree("Olivo", 23.3, 1.80));
 	stock.addFlower(new Flower("Jazmín", 7.0, "blanco"));
-	OrnamentMaterial.getInstance("WOOD");
-	stock.addOrnament(new Ornament("Máscara mexicana", 60.0));
+	stock.addOrnament(new Ornament("Máscara mexicana", 60.0, "wood"));
 	
 	Writer.writeFlorist(miFloristeria);
 	

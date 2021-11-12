@@ -10,9 +10,16 @@ public class Ornament extends Product implements Serializable  {
 	private static final long serialVersionUID = 1L;
 	private String material;
 	
-	public Ornament(String name, double price) {
+	public Ornament(String name, double price, String material) throws TipoMaterialException {
 		super(name, price);
-		this.material = OrnamentMaterial.getType();
+		if (material.equalsIgnoreCase("madera"))
+		{
+			this.material = "Madera";
+		} else if (material.equalsIgnoreCase("plástico")) {
+			this.material = "Plástico";
+		} else {
+			throw new TipoMaterialException("El tipo de material no es válido");
+		}
 	}
 
 	public String getMaterial() {
