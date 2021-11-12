@@ -18,7 +18,7 @@ public class Ornament extends Product implements Serializable  {
 		} else if (material.equalsIgnoreCase("plástico")) {
 			this.material = "Plástico";
 		} else {
-			throw new TipoMaterialException("El tipo de material no es válido");
+			throw new TipoMaterialException("El tipo de material de la decoración no es válido");
 		}
 	}
 
