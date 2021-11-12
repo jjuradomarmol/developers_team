@@ -1,7 +1,14 @@
 package model;
 
-public class Florist {
+import java.io.Serializable;
+
+public class Florist implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static Florist instance;
 	
 	private String name;
@@ -34,4 +41,10 @@ public class Florist {
 		return stock;
 	}
 
+	@Override
+	public String toString() {
+		return "La floristería " + this.getName() + " tiene un stock de: \n" + 
+				this.stock.toString() + "Con un valor total de " + 
+				this.stock.getTotalStockValue() + "€";
+	}
 }

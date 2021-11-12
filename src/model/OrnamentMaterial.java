@@ -1,28 +1,29 @@
 package model;
 
-import java.util.HashMap;
-
 public class OrnamentMaterial {
 	
-	private static HashMap<String, OrnamentMaterial> instance =
-		new HashMap<String, OrnamentMaterial>();
-
-	private String type;
-	public final static String WOOD = "WOOD";
-	public final static String PLASTIC = "PLASTIC";
+	private static OrnamentMaterial instance;
+	public static String type;
 	
 	private OrnamentMaterial (String type){
-		this.type = type;
+		OrnamentMaterial.type = type;
 	}
 	
 	public static OrnamentMaterial getInstance(String type) {
-		if (!instance.containsKey(type)) {
-			instance.put(type, new OrnamentMaterial(type));
+		if (instance == null) {
+			if (type.equalsIgnoreCase("wood")) {
+				instance = new OrnamentMaterial("Madera");
+			} else if (type.equalsIgnoreCase("plastic")) {
+				instance = new OrnamentMaterial("Plástico");
+			}
+			else {
+				System.out.println("No ha escrito un material de decoración válido");
+			}
 		}
-		return instance.get(type);
+		return instance;
 	}
 
-	public String getType() {
+	public static String getType() {
 		return type;
 	}
 	
