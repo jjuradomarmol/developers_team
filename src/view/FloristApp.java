@@ -1,8 +1,6 @@
 package view;
 
 import model.*;
-import model.ticketMemento.*;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -11,54 +9,60 @@ import controller.*;
 public class FloristApp {
 
 	public static void main(String[] args) throws IOException, ClassNotFoundException, TipoMaterialException {
-		
+	
 	Florist miFloristeria = Florist.getInstance("miFloristeria");
 	
 	Stock stock = Stock.getInstance();
 	
 	Tree olivo = new Tree("Olivo", 23.3, 1.80);
+	Tree naranjo = new Tree("Naranjo", 19.90, 1.80);
 	stock.addTree(olivo);
+	stock.addTree(naranjo);
 	Flower jazmin = new Flower("Jazmín", 7.0, "blanco");
+	Flower rosa = new Flower("Rosa", 4.0, "rojo");
 	stock.addFlower(jazmin);
-	Ornament mascara = new Ornament("Máscara mexicana", 60.0, "plástico");
+	stock.addFlower(rosa);
+	Ornament mascara = new Ornament("Máscara mexicana", 60.0, "madera");
+	Ornament funkoPop = new Ornament("Funko Baby Yoda", 17, "plástico");
 	stock.addOrnament(mascara);
+	stock.addOrnament(funkoPop);
 	
-	Writer.writeFlorist(miFloristeria);
+	FloristRepository.writeFlorist(miFloristeria);
 	
-	System.out.println(Reader.readFlorist().toString());
+	System.out.println(FloristRepository.readFlorist().toString());
 	
-	/*
 	System.out.println("\n\n");
 	
-	stock.deleteTree("Olivo");
-	stock.deleteFlower("Jazmín");
-	stock.deleteOrnament("Máscara mexicana");
+	stock.deleteTree("Naranjo");
+	stock.deleteFlower("Rosa");
+	stock.deleteOrnament("Funko Baby Yoda");
 	
-	Writer.writeFlorist(miFloristeria);
+	System.out.println("Tres productos borrados");
 	
-	System.out.println(Reader.readFlorist().toString());
-	}
-	*/
+	System.out.println("\n\n");
+	
+	FloristRepository.writeFlorist(miFloristeria);
+	
+	System.out.println(FloristRepository.readFlorist().toString());
 	
 	ArrayList<Product> compra1 = new ArrayList<>();
 	compra1.add(olivo);
 	compra1.add(mascara);
-	Ticket ticket1 = new Ticket(compra1);
+	Ticket.addTicket(compra1);
 	
+	ArrayList<Product> compra2 = new ArrayList<>();
+	compra2.add(jazmin);
+	Ticket.addTicket(compra2);
 	
-	Caretaker caretaker = new Caretaker();
-	Originator originator = new Originator();
-	
-	originator.setState(ticket1);
-	caretaker.addMemento(originator.saveStateToMemento());
-	
-	// Falta por recuperar un ticket, pero cuando se añadan varios, se puede recuperar 
-	// por la id con originator.getStateFromMemento(caretaker.getMemento(numeroDeTicket));
-	
-	Writer.writeFlorist(miFloristeria);
+	FloristRepository.writeFlorist(miFloristeria);
 	
 	System.out.println("\n\n\n");
-	System.out.println(Reader.readFlorist().toString());
+	
+	System.out.println("Lista de tickets: ");
+	System.out.println(FloristRepository.readFlorist().printTickets());
+	
+	System.out.println("Valor total de las ventas: " +  
+	FloristRepository.readFlorist().getTicket().totalTickets() + "€");
 	
 	}
 
