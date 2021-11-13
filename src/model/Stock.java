@@ -96,19 +96,19 @@ public class Stock implements Serializable {
 	public String toString() {
 		String totalArrays = "";
 		
-		totalArrays += "\n¡rboles:\n";
+		totalArrays += "\n\t¡rboles:\n";
 		for (Tree tree : treeStock) {
-			totalArrays += tree.toString() + "\n";
+			totalArrays += "\t\t" + tree.toString() + "\n";
 		}
 		
-		totalArrays += "\nFlores:\n";
+		totalArrays += "\n\tFlores:\n";
 		for (Flower flower : flowerStock) {
-			totalArrays += flower.toString() + "\n";
+			totalArrays += "\t\t" + flower.toString() + "\n";
 		}
 		
-		totalArrays += "\nDecoraciones:\n";
+		totalArrays += "\n\tDecoraciones:\n";
 		for (Ornament ornament : ornamentStock) {
-			totalArrays += ornament.toString() + "\n";
+			totalArrays += "\t\t" + ornament.toString() + "\n";
 		}
 		totalArrays += "\n";
 		

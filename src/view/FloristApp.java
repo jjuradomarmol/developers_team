@@ -58,11 +58,9 @@ public class FloristApp {
 	
 	System.out.println("\n\n\n");
 	
-	System.out.println("Lista de tickets: ");
 	System.out.println(FloristRepository.readFlorist().printTickets());
 	
-	System.out.println("Valor total de las ventas: " +  
-	FloristRepository.readFlorist().getTicket().totalTickets() + "€");
+	System.out.println(FloristRepository.readFlorist().getTicket().totalTickets());
 	
 	}
 

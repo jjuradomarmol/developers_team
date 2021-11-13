@@ -47,14 +47,14 @@ public class Ticket implements Serializable {
 		}
 	}
 	
-	public double totalTickets() {
+	public String totalTickets() {
 		double result = 0.0;
 		for (int i : Ticket.tickets.keySet()) {
 			for (Product product : Ticket.tickets.get(i)) {
 				result += product.getPrice();
 			}
 		}
-		return result;
+		return "Valor total de las ventas: " + result + "€";
 	}
 
 	public static int getCount() {
@@ -68,12 +68,12 @@ public class Ticket implements Serializable {
 	
 
 	public String printTickets() {
-		String result = "";
+		String result = "Lista de tickets: ";
 		for (int i : Ticket.tickets.keySet()) {
-			  result += "Ticket nº " + i + ":\n";
+			  result += "\n\tTicket nº " + i + ":";
 		for (Product product : Ticket.tickets.get(i)) {
-			result += "Producto: " + product.getName() + ", "
-					+ "Precio: " + product.getPrice() + "€\n";
+			result += "\n\t\tProducto: " + product.getName() + ", "
+					+ "Precio: " + product.getPrice() + "€";
 		}
 		result += "\n";
 		}

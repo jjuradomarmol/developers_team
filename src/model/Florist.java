@@ -55,7 +55,7 @@ public class Florist implements Serializable{
 	@Override
 	public String toString() {
 		return "La floristería " + this.getName() + " tiene un stock de: \n" + 
-				this.stock.toString() + "Con un valor total de " + 
+				this.stock.toString() + "\tCon un valor total de " + 
 				this.stock.getTotalStockValue() + "€";
 	}
 }
