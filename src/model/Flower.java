@@ -1,6 +1,13 @@
 package model;
 
-public class Flower extends Product {
+import java.io.Serializable;
+
+public class Flower extends Product implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
 	private String color;
 	
@@ -15,6 +22,12 @@ public class Flower extends Product {
 
 	public void setColor(String color) {
 		this.color = color;
+	}
+	
+	@Override
+	public String toString() {
+		return "Nombre: " + this.getName() + ", Precio: " + this.getPrice() + 
+				", Color: " + this.getColor();
 	}
 	
 }

@@ -1,14 +1,35 @@
 package model;
 
-public class Florist {
+import java.io.Serializable;
+
+public class Florist implements Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private static Florist instance;
 	
 	private String name;
 	
 	private Stock stock;
 	
-	public Florist(String name) {
+	private Ticket ticket;
+	
+	private Florist() {}
+	
+	private Florist(String name) {
 		this.name = name;
-		this.stock = new Stock();
+		this.stock = Stock.getInstance();
+		this.ticket = Ticket.getInstance();
+	}
+	
+	public static Florist getInstance(String name) {
+		if (instance == null) {
+			instance = new Florist(name);
+		}
+		return instance;
 	}
 
 	public String getName() {
@@ -22,5 +43,19 @@ public class Florist {
 	public Stock getStock() {
 		return stock;
 	}
-
+	
+	public Ticket getTicket() {
+		return ticket;
+	}
+	
+	public String printTickets() {
+		return this.ticket.printTickets();
+	}
+	
+	@Override
+	public String toString() {
+		return "La floristería " + this.getName() + " tiene un stock de: \n" + 
+				this.stock.toString() + "\tCon un valor total de " + 
+				this.stock.getTotalStockValue() + "€";
+	}
 }
