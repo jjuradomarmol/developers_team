@@ -1,9 +1,5 @@
 package view;
 
-//import model.*;
-
-//import java.io.IOException;
-
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -11,13 +7,9 @@ import controller.CreateFloristController;
 import controller.ShowStockController;
 import controller.CreateProductController;
 
-//import controller.*;
-
-// El código de cambios_javier está comentado debajo
-
 public class FloristApp {
 
-public static void main(String[] args) {
+	public static void main(String[] args) {
 		
 		Scanner sc = new Scanner(System.in);
 		boolean ask = true;
@@ -151,33 +143,3 @@ public static void main(String[] args) {
 	}
 
 }
-
-
-/*	
-public static void main(String[] args) throws IOException, ClassNotFoundException {
-	
-Florist miFloristeria = Florist.getInstance("miFloristeria");
-
-Stock stock = Stock.getInstance();
-
-stock.addTree(new Tree("Olivo", 23.3, 1.80));
-stock.addFlower(new Flower("Jazmín", 7.0, "blanco"));
-OrnamentMaterial.getInstance("WOOD");
-stock.addOrnament(new Ornament("Máscara mexicana", 60.0));
-
-Writer.writeFlorist(miFloristeria);
-
-System.out.println(Reader.readFlorist().toString());
-
-/*
-System.out.println("\n\n");
-
-stock.deleteTree("Olivo");
-stock.deleteFlower("Jazmín");
-stock.deleteOrnament("Máscara mexicana");
-
-Writer.writeFlorist(miFloristeria);
-
-System.out.println(Reader.readFlorist().toString());
-}
-*/
