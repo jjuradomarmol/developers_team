@@ -31,28 +31,28 @@ public class Ticket implements Serializable {
 		return instance;
 	}
 	
-	public static void addTicket(ArrayList<Product> productos) throws IOException {
+/*	public static void addTicket(ArrayList<Product> products) throws IOException {
 		Ticket.id = setCount(getCount() + 1);
-		Ticket.tickets.put(id, productos);
-		for(Product producto : productos) {
-			if (producto instanceof Flower) {
-				stock.deleteFlower(producto.getName());
-			} else if (producto instanceof Ornament) {
-				stock.deleteOrnament(producto.getName());
-			} else if (producto instanceof Tree) {
-				stock.deleteTree(producto.getName());
+		Ticket.tickets.put(id, products);
+		for(Product product : products) {
+			if (product instanceof Flower) {
+				stock.deleteFlower(product);
+			} else if (product instanceof Ornament) {
+				stock.deleteOrnament(product);
+			} else if (product instanceof Tree) {
+				stock.deleteTree(product);
 			}
 		}
 	}
-	
-	public String totalTickets() {
+*/	
+	public double totalTickets() {
 		double result = 0.0;
 		for (int i : Ticket.tickets.keySet()) {
 			for (Product product : Ticket.tickets.get(i)) {
 				result += product.getPrice();
 			}
 		}
-		return "Valor total de las ventas: " + result + "€";
+		return result;
 	}
 
 	public static int getCount() {
@@ -64,7 +64,8 @@ public class Ticket implements Serializable {
 		return count;
 	}
 	
-	public String printTickets() {
+	@Override
+	public String toString() {
 		String result = "Lista de tickets: ";
 		for (int i : Ticket.tickets.keySet()) {
 			  result += "\n\tTicket nº " + i + ":";

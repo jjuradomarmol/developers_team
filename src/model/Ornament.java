@@ -10,24 +10,26 @@ public class Ornament extends Product implements Serializable  {
 	private static final long serialVersionUID = 1L;
 	private String material;
 
-	public Ornament(String name, double price, String material) {
+	public Ornament(
+		String name,
+		double price,
+		String material
+	) throws MaterialTypeException {
 		super(name, price);
+		this.checkMaterial(material);
 		this.material = material;
-		}
-/*
-Incorporaré esta parte más adelante.
-
-public Ornament(String name, double price, String material) throws TipoMaterialException {
-	super(name, price);
-	if (material.equalsIgnoreCase("madera"))
-	{
-		this.material = "Madera";
-	} else if (material.equalsIgnoreCase("plástico")) {
-		this.material = "Plástico";
-	} else {
-		throw new TipoMaterialException("El tipo de material de la decoración no es válido");
 	}
-*/
+	
+	private void checkMaterial(String material) throws MaterialTypeException {
+		if ((!material.equalsIgnoreCase("madera"))
+				&&(!material.equalsIgnoreCase("plástico"))) {
+			throw new MaterialTypeException(
+				"El material " + material + " no es válido. "
+				+ "Introduzca un material válido "
+				+ "(madera/plástico):"
+			);
+		}		
+	}
 
 	public String getMaterial() {
 		return material;
@@ -39,7 +41,7 @@ public Ornament(String name, double price, String material) throws TipoMaterialE
 	
 	@Override
 	public String toString() {
-		return "Nombre: " + this.getName() + ", Precio: " + this.getPrice() + 
-				", Material: " + this.getMaterial();
+		return this.getName() + " || precio: " + this.getPrice() + 
+				"€ || material: " + this.getMaterial();
 	}
 }

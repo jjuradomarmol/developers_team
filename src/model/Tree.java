@@ -25,8 +25,8 @@ public class Tree extends Product implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Nombre: " + this.getName() + ", Precio: " + this.getPrice() + 
-				", Altura: " + this.getHeight();
+		return this.getName() + " || precio: " + this.getPrice() + 
+				"€ || altura: " + this.getHeight();
 	}
 	
 }

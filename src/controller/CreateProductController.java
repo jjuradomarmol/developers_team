@@ -6,12 +6,18 @@ import model.ProductFactoryCriteria;
 import model.Stock;
 import model.Tree;
 import model.Flower;
+import model.MaterialTypeException;
 import model.Ornament;
 
 public class CreateProductController {
 
-	public String createProduct(String name, double price, Double height, 
-			String color, String material) {
+	public String createProduct(
+			String name,
+			double price,
+			Double height,
+			String color,
+			String material
+	) throws MaterialTypeException {
 		ProductFactoryCriteria productCriteria = 
 				new ProductFactoryCriteria(name, price);
 		productCriteria.setHeight(height);

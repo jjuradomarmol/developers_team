@@ -4,7 +4,9 @@ import java.util.InputMismatchException;
 
 public class ProductFactory {
 	
-	public Product createProduct(ProductFactoryCriteria product) {
+	public Product createProduct(
+		ProductFactoryCriteria product
+	) throws MaterialTypeException {
 		if (product.hasHeight()) {
 			return new Tree (
 				product.getName(), 
@@ -24,7 +26,7 @@ public class ProductFactory {
 				product.getMaterial()
 			);
 		} else {
-			throw new InputMismatchException();
+			throw new InputMismatchException("Producto no reconocido.");
 		}
 	}
 

@@ -3,9 +3,10 @@ package view;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import controller.CreateFloristController;
-import controller.ShowStockController;
-import controller.CreateProductController;
+import controller.*;
+import model.MaterialTypeException;
+import model.Ornament;
+import model.Stock;
 
 public class FloristApp {
 
@@ -14,13 +15,22 @@ public class FloristApp {
 		Scanner sc = new Scanner(System.in);
 		boolean ask = true;
 		
+		
+		try {
+			Stock.getInstance().addOrnament(new Ornament ("Yoyo", 12, "madera"));
+			Stock.getInstance().addOrnament(new Ornament ("Jarrón", 12, "plástico"));
+		} catch (MaterialTypeException e) {
+			e.printStackTrace();
+		}
+		
+		
 		while (ask) {
 			System.out.println("Bienvenido/a. ¿Qué desea hacer?\n"
 					+ "1. Crear una floristeria\n"
 					+ "2. Añadir un producto\n"
 					+ "3. Retirar un producto\n"
 					+ "4. Ver productos\n"
-					+ "5. Ver cantidades disponibles\n"
+					+ "5. Ver número de productos disponibles por categoria\n"
 					+ "6. Ver el valor de la floristeria\n"
 					+ "7. Comprar\n"
 					+ "8. Ver historial de compras\n"
@@ -35,31 +45,37 @@ public class FloristApp {
 					createFlorist(sc);
 					break;
 				case 2:
-					selectProduct();
+					selectProduct("añadir");
 					setProduct(sc, (selectNumericOption(sc, 1, 3)));
 					break;
 				case 3:
-					selectProduct();
-					selectNumericOption(sc, 1, 3);
+					selectProduct("retirar");
+					selectProductToRemove(sc);
 					break;
 				case 4:
-					new ShowStockController().showStock();
+					System.out.println(new ShowStockController().showStock());
 					break;
 				case 5:
-					
+					System.out.println(new ShowStockQuantityController()
+						.showStockQuantity());
 					break;
 				case 6:
 					System.out.println("El valor total de la floristeria es de "
-							+  " euros.");
+							+ Stock.getInstance().getTotalStockValue() +  
+							" euros.");
 					break;
 				case 7:
 					
 					break;
 				case 8:
-					
+					System.out.println(new ShowTicketsController()
+							.showTickets());
 					break;
 				case 9:
-					
+					double income = new GetIncomeController().getIncome();
+					System.out.println(
+						"Valor total de las ventas: " + income + "€"
+					);
 					break;
 				case 10:
 					ask = false;
@@ -82,27 +98,26 @@ public class FloristApp {
 			case 1:
 				System.out.println("Introduzca la altura:");
 				height = Double.parseDouble(sc.nextLine());
+				break;
 			case 2:
 				System.out.println("Introduzca el color:");
 				color = sc.nextLine();
+				break;
 			case 3:
 				System.out.println("Introduzca el material (madera/plástico):");
-				String m = sc.nextLine();
-				while ((!m.equalsIgnoreCase("madera"))
-						&&(!m.equalsIgnoreCase("plástico"))) {
-					System.out.println("El material introducido no es válido. "
-							+ "Introduzca un material válido "
-							+ "(madera/plástico):");
-					m = sc.nextLine();
-					}
-				material = m.toLowerCase();
+				material = sc.nextLine().toLowerCase();
+				break;
 		}
 		try {
 			String addedProduct = new CreateProductController()
 				.createProduct(name, price, height, color, material);
 			System.out.println("Producto añadido correctamente.\n"
 					+ addedProduct);
-		} catch (Exception e) {
+		} catch (MaterialTypeException e) {
+			System.out.println("No se ha podido añadir el producto. "
+				+ e.getMessage());
+			setProduct(sc, option);
+		} catch (InputMismatchException e ) {
 			System.out.println("No se ha podido añadir el producto. "
 				+ e.getMessage());
 		}
@@ -117,8 +132,9 @@ public class FloristApp {
 				" se ha creado correctamente.");
 	}
 
-	private static void selectProduct() {
-		System.out.println("Seleccione el tipo de producto:\n"
+	private static void selectProduct(String operation) {
+		System.out.println("Seleccione el tipo de producto que desea "
+				+ operation + ":\n"
 				+ "1. Árbol\n"
 				+ "2. Flor\n"
 				+ "3. Adorno");
@@ -139,6 +155,30 @@ public class FloristApp {
 			System.out.println("No ha introducido un número válido."
 					+ " Introduzca el número de una de las opciones:");
 			return selectNumericOption(sc, min, max);
+		}
+	}
+	
+	private static void selectProductToRemove(Scanner sc) {
+		int num = selectNumericOption(sc, 1, 3);
+		GetProductListControllerResponse response = 
+				new GetProductListController().getProductList(num);
+		if (response.getArrayListSize() == 0) {
+			System.out.println("No hay existencias disponibles.");
+			return;
+		}
+		System.out.println("Estos son los artículos disponibles:");
+		System.out.println(response.getListToPrint());
+		System.out.println("Introduzca el número del artículo a retirar:");
+		int itemNumber = (selectNumericOption(
+			sc, 
+			1, 
+			response.getArrayListSize()
+		)) - 1;
+		try {
+			new RemoveProductController().removeProduct(num, itemNumber);
+			System.out.println("El producto se ha eliminado correctamente.");
+		} catch (Exception e) {
+			System.out.println("No se ha podido eliminar el producto.");
 		}
 	}
 

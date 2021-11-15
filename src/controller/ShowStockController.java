@@ -4,8 +4,8 @@ import model.Stock;
 
 public class ShowStockController {
 	
-	public void showStock() {
-		Stock.getInstance().toString();
+	public String showStock() {
+		return Stock.getInstance().toString();
 	}
 
 }

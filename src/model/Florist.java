@@ -17,7 +17,7 @@ public class Florist implements Serializable{
 	
 	private Ticket ticket;
 	
-	private Florist() {}
+	// private Florist() {}
 	
 	private Florist(String name) {
 		this.name = name;
@@ -46,10 +46,6 @@ public class Florist implements Serializable{
 	
 	public Ticket getTicket() {
 		return ticket;
-	}
-	
-	public String printTickets() {
-		return this.ticket.printTickets();
 	}
 	
 	@Override
