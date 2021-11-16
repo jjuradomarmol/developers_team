@@ -17,8 +17,6 @@ public class Florist implements Serializable{
 	
 	private Ticket ticket;
 	
-	// private Florist() {}
-	
 	private Florist(String name) {
 		this.name = name;
 		this.stock = Stock.getInstance();

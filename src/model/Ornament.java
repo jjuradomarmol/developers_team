@@ -24,9 +24,9 @@ public class Ornament extends Product implements Serializable  {
 		if ((!material.equalsIgnoreCase("madera"))
 				&&(!material.equalsIgnoreCase("plástico"))) {
 			throw new MaterialTypeException(
-				"El material " + material + " no es válido. "
-				+ "Introduzca un material válido "
-				+ "(madera/plástico):"
+				"El material " + material + " no es válido.\n"
+				+ "Vuelva a introducir los datos del producto "
+				+ "con un material válido (madera/plástico)."
 			);
 		}		
 	}
