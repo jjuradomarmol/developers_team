@@ -22,19 +22,19 @@ public class FloristApp {
 		
 		try {
 			Stock.getInstance().addOrnament(new Ornament ("Yoyo", 12, "madera"));
-			Stock.getInstance().addOrnament(new Ornament ("JarrÛn", 12, "pl·stico"));
+			Stock.getInstance().addOrnament(new Ornament ("Jarr√≥n", 12, "pl√°stico"));
 		} catch (MaterialTypeException e) {
 			e.printStackTrace();
 		}
 		
 		
 		while (ask) {
-			System.out.println("Bienvenido/a. øQuÈ desea hacer?\n"
+			System.out.println("Bienvenido/a. ¬øQu√© desea hacer?\n"
 					+ "1. Crear una floristeria\n"
-					+ "2. AÒadir un producto\n"
+					+ "2. A√±adir un producto\n"
 					+ "3. Retirar un producto\n"
 					+ "4. Ver productos\n"
-					+ "5. Ver n˙mero de productos disponibles por categoria\n"
+					+ "5. Ver n√∫mero de productos disponibles por categoria\n"
 					+ "6. Ver el valor de la floristeria\n"
 					+ "7. Comprar\n"
 					+ "8. Ver historial de compras\n"
@@ -49,7 +49,7 @@ public class FloristApp {
 					createFlorist(sc);
 					break;
 				case 2:
-					selectProduct("aÒadir");
+					selectProduct("a√±adir");
 					setProduct(sc, (selectNumericOption(sc, 1, 3)));
 					break;
 				case 3:
@@ -78,7 +78,7 @@ public class FloristApp {
 				case 9:
 					double income = new TicketsController().getIncome();
 					System.out.println(
-						"Valor total de las ventas: " + income + "Ä"
+						"Valor total de las ventas: " + income + "‚Ç¨"
 					);
 					break;
 				case 10:
@@ -107,8 +107,8 @@ public class FloristApp {
 		Scanner sc = new Scanner(System.in);
 		
 		while (buyFlag) {
-			System.out.println("Indique 1 para comprar un ·rbol, "
-					+ "2 para comprar una flor o 3 para comprar una decoraciÛn:");
+			System.out.println("Indique 1 para comprar un √°rbol, "
+					+ "2 para comprar una flor o 3 para comprar una decoraci√≥n:");
 			categoria = Integer.parseInt(sc.nextLine());
 			
 			System.out.println("Indique el nombre del producto:");
@@ -120,15 +120,16 @@ public class FloristApp {
 				productos.add(product);
 			}
 			
-			System.out.println("øQuiere seguir comprando? (sÌ/no)");
+			System.out.println("¬øQuiere seguir comprando? (s√≠/no)");
 			seguir = sc.nextLine();
 			
-			if (!seguir.equalsIgnoreCase("sÌ") || !seguir.equalsIgnoreCase("sÌ")) {
+			if (!seguir.equalsIgnoreCase("s√≠") || !seguir.equalsIgnoreCase("s√≠")) {
 				buyFlag = false;
 			}
 		};
 		
 		new TicketsController().addTicket(productos);
+		sc.close();
 	}
 
 	private static void setProduct(Scanner sc, int option) throws FileNotFoundException, IOException {
@@ -148,21 +149,21 @@ public class FloristApp {
 				color = sc.nextLine();
 				break;
 			case 3:
-				System.out.println("Introduzca el material (madera/pl·stico):");
+				System.out.println("Introduzca el material (madera/pl√°stico):");
 				material = sc.nextLine().toLowerCase();
 				break;
 		}
 		try {
 			String addedProduct = new ProductsController()
 				.createProduct(name, price, height, color, material);
-			System.out.println("Producto aÒadido correctamente.\n"
+			System.out.println("Producto a√±adido correctamente.\n"
 					+ addedProduct);
 		} catch (MaterialTypeException e) {
-			System.out.println("No se ha podido aÒadir el producto. "
+			System.out.println("No se ha podido a√±adir el producto. "
 				+ e.getMessage());
 			setProduct(sc, option);
 		} catch (InputMismatchException e ) {
-			System.out.println("No se ha podido aÒadir el producto. "
+			System.out.println("No se ha podido a√±adir el producto. "
 				+ e.getMessage());
 		}
 	}
@@ -179,7 +180,7 @@ public class FloristApp {
 	private static void selectProduct(String operation) {
 		System.out.println("Seleccione el tipo de producto que desea "
 				+ operation + ":\n"
-				+ "1. ¡rbol\n"
+				+ "1. √Årbol\n"
 				+ "2. Flor\n"
 				+ "3. Adorno");
 	}
@@ -192,12 +193,12 @@ public class FloristApp {
 			}
 			return num;
 		} catch (NumberFormatException e) {
-			System.out.println("No ha introducido un n˙mero."
-					+ " Introduzca un n˙mero v·lido:");
+			System.out.println("No ha introducido un n√∫mero."
+					+ " Introduzca un n√∫mero v√°lido:");
 			return selectNumericOption(sc, min, max);
 		} catch (InputMismatchException e) {
-			System.out.println("No ha introducido un n˙mero v·lido."
-					+ " Introduzca el n˙mero de una de las opciones:");
+			System.out.println("No ha introducido un n√∫mero v√°lido."
+					+ " Introduzca el n√∫mero de una de las opciones:");
 			return selectNumericOption(sc, min, max);
 		}
 	}
@@ -210,9 +211,9 @@ public class FloristApp {
 			System.out.println("No hay existencias disponibles.");
 			return;
 		}
-		System.out.println("Estos son los artÌculos disponibles:");
+		System.out.println("Estos son los art√≠culos disponibles:");
 		System.out.println(response.getListToPrint());
-		System.out.println("Introduzca el n˙mero del artÌculo a retirar:");
+		System.out.println("Introduzca el n√∫mero del art√≠culo a retirar:");
 		int itemNumber = (selectNumericOption(
 			sc, 
 			1, 
