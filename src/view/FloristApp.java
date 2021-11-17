@@ -1,16 +1,20 @@
 package view;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import controller.*;
 import model.MaterialTypeException;
 import model.Ornament;
+import model.Product;
 import model.Stock;
 
 public class FloristApp {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		
 		Scanner sc = new Scanner(System.in);
 		boolean ask = true;
@@ -38,7 +42,7 @@ public class FloristApp {
 					+ "10. Salir");
 			
 			int num = selectNumericOption(sc, 1, 10);
-			
+
 			switch(num) {
 				
 				case 1:
@@ -53,10 +57,10 @@ public class FloristApp {
 					selectProductToRemove(sc);
 					break;
 				case 4:
-					System.out.println(new ShowStockController().showStock());
+					System.out.println(new StocksController().showStock());
 					break;
 				case 5:
-					System.out.println(new ShowStockQuantityController()
+					System.out.println(new StocksController()
 						.showStockQuantity());
 					break;
 				case 6:
@@ -65,14 +69,14 @@ public class FloristApp {
 							" euros.");
 					break;
 				case 7:
-					
+					createTicket();
 					break;
 				case 8:
-					System.out.println(new ShowTicketsController()
+					System.out.println(new TicketsController()
 							.showTickets());
 					break;
 				case 9:
-					double income = new GetIncomeController().getIncome();
+					double income = new TicketsController().getIncome();
 					System.out.println(
 						"Valor total de las ventas: " + income + "€"
 					);
@@ -81,13 +85,53 @@ public class FloristApp {
 					ask = false;
 					break;		
 				}
+			
+			System.out.println("\n");
 		}
 		
 		sc.close();
-		
 	}
 
-	private static void setProduct(Scanner sc, int option) {
+	// Added method
+	private static void createTicket() throws IOException {
+		ProductsController productsController = new ProductsController();
+		Stock stock = Stock.getInstance();
+		
+		ArrayList<Product> productos = new ArrayList<>();
+		boolean buyFlag = true;
+		int categoria;
+		String nombre;
+		Product product;
+		String seguir;
+		
+		Scanner sc = new Scanner(System.in);
+		
+		while (buyFlag) {
+			System.out.println("Indique 1 para comprar un árbol, "
+					+ "2 para comprar una flor o 3 para comprar una decoración:");
+			categoria = Integer.parseInt(sc.nextLine());
+			
+			System.out.println("Indique el nombre del producto:");
+			nombre = sc.nextLine();
+			
+			product = productsController.getProduct(categoria, nombre);
+			
+			if (product != null) {
+				productos.add(product);
+			}
+			
+			System.out.println("¿Quiere seguir comprando? (sí/no)");
+			seguir = sc.nextLine();
+			
+			if (!seguir.equalsIgnoreCase("sí") || !seguir.equalsIgnoreCase("sí")) {
+				buyFlag = false;
+			}
+		};
+		
+		new TicketsController().addTicket(productos);
+	}
+
+	private static void setProduct(Scanner sc, int option) throws FileNotFoundException, IOException {
 		System.out.println("Introduzca el nombre:");
 		String name = sc.nextLine();
 		System.out.println("Introduzca el precio:");
@@ -109,7 +153,7 @@ public class FloristApp {
 				break;
 		}
 		try {
-			String addedProduct = new CreateProductController()
+			String addedProduct = new ProductsController()
 				.createProduct(name, price, height, color, material);
 			System.out.println("Producto añadido correctamente.\n"
 					+ addedProduct);
@@ -123,11 +167,11 @@ public class FloristApp {
 		}
 	}
 
-	private static void createFlorist(Scanner sc) {
+	private static void createFlorist(Scanner sc) throws IOException {
 		System.out.println("Escriba el nombre de la floristeria "
 				+ "que desea crear:");
 		String name = sc.nextLine();
-		new CreateFloristController().createFlorist(name);
+		new FloristsController().createFlorist(name);
 		System.out.println("La floristeria " + name + 
 				" se ha creado correctamente.");
 	}
@@ -160,8 +204,8 @@ public class FloristApp {
 	
 	private static void selectProductToRemove(Scanner sc) {
 		int num = selectNumericOption(sc, 1, 3);
-		GetProductListControllerResponse response = 
-				new GetProductListController().getProductList(num);
+		ProductListControllerResponse response = 
+				new ProductsController().getProductList(num);
 		if (response.getArrayListSize() == 0) {
 			System.out.println("No hay existencias disponibles.");
 			return;
@@ -175,7 +219,7 @@ public class FloristApp {
 			response.getArrayListSize()
 		)) - 1;
 		try {
-			new RemoveProductController().removeProduct(num, itemNumber);
+			new ProductsController().removeProduct(num, itemNumber);
 			System.out.println("El producto se ha eliminado correctamente.");
 		} catch (Exception e) {
 			System.out.println("No se ha podido eliminar el producto.");
