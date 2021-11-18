@@ -42,6 +42,42 @@ public class Stock implements Serializable {
 		return ornamentStock;
 	}
 	
+	public Tree getTree(String nombre) {
+		Iterator<Tree> it = treeStock.iterator();
+		while (it.hasNext()) {
+			Tree tree = it.next();
+			if (tree.getName().equalsIgnoreCase(nombre)) {
+				return tree;
+			}
+		}
+		
+		return null;
+	}
+	
+	public Flower getFlower(String nombre) {
+		Iterator<Flower> it = flowerStock.iterator();
+		while (it.hasNext()) {
+			Flower flower = it.next();
+			if (flower.getName().equalsIgnoreCase(nombre)) {
+				return flower;
+			}
+		}
+		
+		return null;
+	}
+	
+	public Ornament getOrnament(String nombre) {
+		Iterator<Ornament> it = ornamentStock.iterator();
+		while (it.hasNext()) {
+			Ornament ornament = it.next();
+			if (ornament.getName().equalsIgnoreCase(nombre)) {
+				return ornament;
+			}
+		}
+		
+		return null;
+	}
+	
 	public void addTree(Tree tree) {
 		treeStock.add(tree);
 	}

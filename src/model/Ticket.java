@@ -31,20 +31,20 @@ public class Ticket implements Serializable {
 		return instance;
 	}
 	
-/*	public static void addTicket(ArrayList<Product> products) throws IOException {
+	public static void addTicket(ArrayList<Product> products) throws IOException {
 		Ticket.id = setCount(getCount() + 1);
 		Ticket.tickets.put(id, products);
 		for(Product product : products) {
 			if (product instanceof Flower) {
-				stock.deleteFlower(product);
+				stock.deleteFlower((Flower) product);
 			} else if (product instanceof Ornament) {
-				stock.deleteOrnament(product);
+				stock.deleteOrnament((Ornament) product);
 			} else if (product instanceof Tree) {
-				stock.deleteTree(product);
+				stock.deleteTree((Tree) product);
 			}
 		}
 	}
-*/	
+	
 	public double totalTickets() {
 		double result = 0.0;
 		for (int i : Ticket.tickets.keySet()) {

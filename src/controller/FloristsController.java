@@ -9,20 +9,18 @@ import java.io.ObjectOutputStream;
 
 import model.Florist;
 
-public class FloristRepository {
-	
-	/* Los nombres de las variables deberían estar en inglés 
-	y el código no debería traspasar la marca de fin de línea*/
+public class FloristsController {
 	
 	public static Florist readFlorist() throws IOException, ClassNotFoundException {
         File f = new File("./src/base_datos.txt");
         ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
-        Florist miFloristeria = (Florist) ois.readObject();
+        Florist florist = (Florist) ois.readObject();
         ois.close();
-        return miFloristeria;
+        return florist;
     }
 	
-	public static void writeFlorist(Florist florist) throws IOException {
+	public static void createFlorist(String name) throws IOException {
+		Florist florist = Florist.getInstance(name);
         File f = new File("./src/base_datos.txt");
         ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f));
         oos.writeObject(florist);
