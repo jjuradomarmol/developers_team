@@ -10,8 +10,8 @@ public class Tree extends Product implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Double height;
 	
-	public Tree(String name, double price, Double height) {
-		super(name, price);
+	public Tree(String name, double price, Double height, int quantity) {
+		super(name, price, quantity);
 		this.height = height;
 	}
 

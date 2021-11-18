@@ -7,12 +7,22 @@ public class ProductFactoryCriteria {
 	private Double height;
 	private String color;
 	private String material;
+	private int quantity;
 	
-	public ProductFactoryCriteria(String name, double price) {
+	public ProductFactoryCriteria(String name, double price, int quantity) {
 		this.name = name;
 		this.price = price;
+		this.quantity = quantity;
 	}
 	
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
 	public boolean hasHeight() {
 		return this.height != null;
 	}
