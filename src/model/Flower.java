@@ -11,8 +11,8 @@ public class Flower extends Product implements Serializable {
 	
 	private String color;
 	
-	public Flower(String name, double price, String color) {
-		super(name, price);
+	public Flower(String name, double price, String color, int quantity) {
+		super(name, price, quantity);
 		this.color = color;
 	}
 
@@ -27,7 +27,8 @@ public class Flower extends Product implements Serializable {
 	@Override
 	public String toString() {
 		return this.getName() + " || precio: " + this.getPrice() + 
-				"€ || color: " + this.getColor();
+			"€ || color: " + this.getColor() + " || cantidad: " 
+			+ this.getQuantity();
 	}
 	
 }

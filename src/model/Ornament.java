@@ -13,9 +13,10 @@ public class Ornament extends Product implements Serializable  {
 	public Ornament(
 		String name,
 		double price,
-		String material
+		String material, 
+		int quantity
 	) throws MaterialTypeException {
-		super(name, price);
+		super(name, price, quantity);
 		this.checkMaterial(material);
 		this.material = material;
 	}
@@ -42,6 +43,7 @@ public class Ornament extends Product implements Serializable  {
 	@Override
 	public String toString() {
 		return this.getName() + " || precio: " + this.getPrice() + 
-				"€ || material: " + this.getMaterial();
+			"€ || material: " + this.getMaterial() + " || cantidad: " 
+			+ this.getQuantity();
 	}
 }

@@ -9,7 +9,7 @@ import java.io.ObjectOutputStream;
 
 import model.Florist;
 
-public class FloristsController {
+public class FloristController {
 	
 	public static Florist readFlorist() throws IOException, ClassNotFoundException {
         File f = new File("./src/base_datos.txt");

@@ -126,13 +126,13 @@ public class Stock implements Serializable {
 	public double getTotalStockValue() {
 		double total = 0.0;
 		for (Tree tree : treeStock) {
-			total += tree.getPrice();			
+			total += tree.getPrice()*tree.getQuantity();			
 		}
 		for (Flower flower : flowerStock) {
-			total += flower.getPrice();			
+			total += flower.getPrice()*flower.getQuantity();			
 		}
 		for (Ornament ornament : ornamentStock) {
-			total += ornament.getPrice();			
+			total += ornament.getPrice()*ornament.getQuantity();			
 		}
 		return total;
 	}

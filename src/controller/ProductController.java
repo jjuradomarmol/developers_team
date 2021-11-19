@@ -2,57 +2,61 @@ package controller;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
 import model.Flower;
 import model.MaterialTypeException;
 import model.Ornament;
 import model.Product;
 import model.ProductFactory;
 import model.ProductFactoryCriteria;
+import model.ProductTypeException;
 import model.Stock;
 import model.Tree;
 
-public class ProductsController {
+public class ProductController {
 	
 	public String createProduct(
 			String name,
 			double price,
 			Double height,
 			String color,
-			String material
-	) throws MaterialTypeException, FileNotFoundException, IOException {
+			String material,
+			int quantity
+	) throws MaterialTypeException, ProductTypeException {
 		ProductFactoryCriteria productCriteria = 
-				new ProductFactoryCriteria(name, price);
+				new ProductFactoryCriteria(name, price, quantity);
 		productCriteria.setHeight(height);
 		productCriteria.setColor(color);
 		productCriteria.setMaterial(material);
+		productCriteria.setQuantity(quantity);
 		Product product = new ProductFactory().createProduct(productCriteria);
 		
 		if (product instanceof Tree) {
 			Stock.getInstance().addTree((Tree) product);
-			// código para añadir árbol a la base de datos
+			// add Tree
 		} else if (product instanceof Flower) {
 			Stock.getInstance().addFlower((Flower) product);
-			// código para añadir flor a la base de datos
+			// add Flower
 		} else if (product instanceof Ornament) {
 			Stock.getInstance().addOrnament((Ornament) product);
-			// código para añadir adorno a la base de datos
+			// Add Ornament
 		}
 		
 		// Save the stock in the database after creating product
-		new StocksController().saveStock();
+		
+		//add try and catch
+		//new StocksController().saveStock();
 		
 		return product.toString();
 	}
 	
-	public Product getProduct(int categoria, String nombre) {
+	public Product getProduct(int category, String name) {
 		Product product;
-		if (categoria == 1) {
-			product = Stock.getInstance().getTree(nombre);
-		} else if (categoria == 2) {
-			product = Stock.getInstance().getFlower(nombre);
-		} else if (categoria == 3) {
-			product = Stock.getInstance().getOrnament(nombre);
+		if (category == 1) {
+			product = Stock.getInstance().getTree(name);
+		} else if (category == 2) {
+			product = Stock.getInstance().getFlower(name);
+		} else if (category == 3) {
+			product = Stock.getInstance().getOrnament(name);
 		} else {
 			product = null;
 		}
@@ -88,20 +92,40 @@ public class ProductsController {
 		return new ProductListControllerResponse(productList, size);
 	}
 	
-	public void removeProduct(int i, int index) throws FileNotFoundException, IOException {
+	public void removeProduct(int i, int index) 
+		throws FileNotFoundException, IOException {
 		Stock stock = Stock.getInstance();
 		if (i == 1) {
 			stock.deleteTree(stock.getTreeStock().get(index));
-			//código para borrar el árbol de la base de datos
+			//remove Tree
 		} else if (i == 2) {
 			stock.deleteFlower(stock.getFlowerStock().get(index));
-			//código para borrar la flor de la base de datos
+			//remove Flower
 		} else if (i == 3) {
 			stock.deleteOrnament(stock.getOrnamentStock().get(index));
-			//código para borrar el adorno de la base de datos
+			//remove Ornament
 		}
 		
 		// Save the stock in the database after deleting product
-		new StocksController().saveStock();
+		new StockController().saveStock();
+	}
+
+	public void updateQuantity(int i, int index, int newQuantity) 
+		throws FileNotFoundException, IOException {
+		Stock stock = Stock.getInstance();
+		if (i == 1) {
+			stock.getTreeStock().get(index).setQuantity(newQuantity);
+			//update Tree
+		} else if (i == 2) {
+			stock.getFlowerStock().get(index).setQuantity(newQuantity);
+			//update Flower
+		} else if (i == 3) {
+			stock.getOrnamentStock().get(index).setQuantity(newQuantity);
+			//update Ornament
+		}
+		
+		// Save the stock in the database after updating quantity
+		new StockController().saveStock();
+		
 	}
 }
