@@ -1,12 +1,10 @@
 package model;
 
-import java.util.InputMismatchException;
-
 public class ProductFactory {
 	
 	public Product createProduct(
 		ProductFactoryCriteria product
-	) throws MaterialTypeException {
+	) throws MaterialTypeException, ProductTypeException {
 		if (product.hasHeight()) {
 			return new Tree (
 				product.getName(), 
@@ -29,7 +27,7 @@ public class ProductFactory {
 				product.getQuantity()
 			);
 		} else {
-			throw new InputMismatchException("Producto no reconocido.");
+			throw new ProductTypeException("Producto no reconocido.");
 		}
 	}
 

@@ -43,6 +43,7 @@ public class Ornament extends Product implements Serializable  {
 	@Override
 	public String toString() {
 		return this.getName() + " || precio: " + this.getPrice() + 
-				"€ || material: " + this.getMaterial();
+			"€ || material: " + this.getMaterial() + " || cantidad: " 
+			+ this.getQuantity();
 	}
 }

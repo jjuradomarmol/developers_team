@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import model.Product;
 import model.Ticket;
 
-public class TicketsController {
+public class TicketController {
 	
 	// Save the ticket in the database
 	public void saveTicket() throws FileNotFoundException, IOException {

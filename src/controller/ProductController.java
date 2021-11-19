@@ -2,17 +2,17 @@ package controller;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
 import model.Flower;
 import model.MaterialTypeException;
 import model.Ornament;
 import model.Product;
 import model.ProductFactory;
 import model.ProductFactoryCriteria;
+import model.ProductTypeException;
 import model.Stock;
 import model.Tree;
 
-public class ProductsController {
+public class ProductController {
 	
 	public String createProduct(
 			String name,
@@ -21,7 +21,7 @@ public class ProductsController {
 			String color,
 			String material,
 			int quantity
-	) throws MaterialTypeException {
+	) throws MaterialTypeException, ProductTypeException {
 		ProductFactoryCriteria productCriteria = 
 				new ProductFactoryCriteria(name, price, quantity);
 		productCriteria.setHeight(height);
@@ -92,7 +92,8 @@ public class ProductsController {
 		return new ProductListControllerResponse(productList, size);
 	}
 	
-	public void removeProduct(int i, int index) throws FileNotFoundException, IOException {
+	public void removeProduct(int i, int index) 
+		throws FileNotFoundException, IOException {
 		Stock stock = Stock.getInstance();
 		if (i == 1) {
 			stock.deleteTree(stock.getTreeStock().get(index));
@@ -106,6 +107,25 @@ public class ProductsController {
 		}
 		
 		// Save the stock in the database after deleting product
-		new StocksController().saveStock();
+		new StockController().saveStock();
+	}
+
+	public void updateQuantity(int i, int index, int newQuantity) 
+		throws FileNotFoundException, IOException {
+		Stock stock = Stock.getInstance();
+		if (i == 1) {
+			stock.getTreeStock().get(index).setQuantity(newQuantity);
+			//update Tree
+		} else if (i == 2) {
+			stock.getFlowerStock().get(index).setQuantity(newQuantity);
+			//update Flower
+		} else if (i == 3) {
+			stock.getOrnamentStock().get(index).setQuantity(newQuantity);
+			//update Ornament
+		}
+		
+		// Save the stock in the database after updating quantity
+		new StockController().saveStock();
+		
 	}
 }

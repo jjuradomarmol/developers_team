@@ -31,7 +31,8 @@ public class Ticket implements Serializable {
 		return instance;
 	}
 	
-	public static void addTicket(ArrayList<Product> products) throws IOException {
+	public static void addTicket(ArrayList<Product> products) 
+			throws IOException {
 		Ticket.id = setCount(getCount() + 1);
 		Ticket.tickets.put(id, products);
 		for(Product product : products) {
