@@ -2,7 +2,7 @@ package model;
 
 public class ProductFactory {
 	
-	public Product createProduct(
+	public Product forgeProduct(
 		ProductFactoryCriteria product
 	) throws MaterialTypeException, ProductTypeException {
 		if (product.hasHeight()) {

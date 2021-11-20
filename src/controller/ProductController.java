@@ -14,22 +14,33 @@ import model.Tree;
 
 public class ProductController {
 	
-	public String createProduct(
-			String name,
-			double price,
-			Double height,
-			String color,
-			String material,
-			int quantity
+	private Product prepareProduct(
+		String name,
+		double price,
+		Double height,
+		String color,
+		String material,
+		int quantity
 	) throws MaterialTypeException, ProductTypeException {
 		ProductFactoryCriteria productCriteria = 
-				new ProductFactoryCriteria(name, price, quantity);
+			new ProductFactoryCriteria(name, price, quantity);
 		productCriteria.setHeight(height);
 		productCriteria.setColor(color);
 		productCriteria.setMaterial(material);
 		productCriteria.setQuantity(quantity);
-		Product product = new ProductFactory().createProduct(productCriteria);
-		
+		return new ProductFactory().forgeProduct(productCriteria);
+	}
+	
+	public void addProduct (
+		String name,
+		double price,
+		Double height,
+		String color,
+		String material,
+		int quantity
+	) throws ProductTypeException, MaterialTypeException {
+		Product product = 
+			prepareProduct(name, price, height, color, material, quantity);
 		if (product instanceof Tree) {
 			Stock.getInstance().addTree((Tree) product);
 			// add Tree
@@ -39,28 +50,26 @@ public class ProductController {
 		} else if (product instanceof Ornament) {
 			Stock.getInstance().addOrnament((Ornament) product);
 			// Add Ornament
+		} else {
+			throw new ProductTypeException("No se ha podido "
+				+ "añadir el producto");
 		}
-		
 		// Save the stock in the database after creating product
-		
 		//add try and catch
 		//new StocksController().saveStock();
-		
-		return product.toString();
 	}
 	
-	public Product getProduct(int category, String name) {
+	public Product getProduct(int i, String name) {
 		Product product;
-		if (category == 1) {
+		if (i == 1) {
 			product = Stock.getInstance().getTree(name);
-		} else if (category == 2) {
+		} else if (i == 2) {
 			product = Stock.getInstance().getFlower(name);
-		} else if (category == 3) {
+		} else if (i == 3) {
 			product = Stock.getInstance().getOrnament(name);
 		} else {
 			product = null;
 		}
-		
 		return product;
 	}
 
@@ -110,22 +119,67 @@ public class ProductController {
 		new StockController().saveStock();
 	}
 
-	public void updateQuantity(int i, int index, int newQuantity) 
+	public void updateQuantity(int i, int index, int quantity) 
 		throws FileNotFoundException, IOException {
 		Stock stock = Stock.getInstance();
 		if (i == 1) {
-			stock.getTreeStock().get(index).setQuantity(newQuantity);
+			Tree tree = stock.getTreeStock().get(index);
+			tree.setQuantity(tree.getQuantity() + quantity);
 			//update Tree
 		} else if (i == 2) {
-			stock.getFlowerStock().get(index).setQuantity(newQuantity);
+			Flower flower = stock.getFlowerStock().get(index);
+			flower.setQuantity(flower.getQuantity() + quantity);
 			//update Flower
 		} else if (i == 3) {
-			stock.getOrnamentStock().get(index).setQuantity(newQuantity);
+			Ornament ornament = stock.getOrnamentStock().get(index);
+			ornament.setQuantity(ornament.getQuantity() + quantity);
 			//update Ornament
 		}
-		
 		// Save the stock in the database after updating quantity
 		new StockController().saveStock();
-		
 	}
+
+	public int checkExistance(
+		String name,
+		double price,
+		Double height,
+		String color,
+		String material,
+		int quantity
+	) throws ProductTypeException, MaterialTypeException {
+		Product product = 
+			prepareProduct(name, price, height, color, material, quantity);
+		if (product instanceof Tree) {
+			for (Tree tree : Stock.getInstance().getTreeStock()) {
+				if (tree.getName().equalsIgnoreCase(product.getName())
+					&& tree.getPrice() == product.getPrice()
+					&& tree.getHeight() == ((Tree) product).getHeight()) {
+					return Stock.getInstance().getTreeStock().indexOf(tree);
+				}
+			}				
+		} else if (product instanceof Flower) {
+			for (Flower flower : Stock.getInstance().getFlowerStock()) {
+				if (flower.getName().equalsIgnoreCase(product.getName())
+					&& flower.getPrice() == product.getPrice()
+					&& flower.getColor()
+					.equalsIgnoreCase(((Flower) product).getColor())) {
+					return Stock.getInstance().getFlowerStock().indexOf(flower);
+				}
+			}
+		} else if (product instanceof Ornament) {
+			for (Ornament ornament : Stock.getInstance().getOrnamentStock()) {
+				if (ornament.getName().equalsIgnoreCase(product.getName())
+					&& ornament.getPrice() == product.getPrice()
+					&& ornament.getMaterial()
+					.equalsIgnoreCase(((Ornament) product).getMaterial())) {
+					return Stock.getInstance().getOrnamentStock()
+						.indexOf(ornament);
+				}
+			}
+		} else {
+			throw new ProductTypeException("No se ha reconocido el producto.");
+		}
+		return -1;
+	}
+	
 }
