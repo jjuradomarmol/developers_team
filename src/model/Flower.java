@@ -31,4 +31,12 @@ public class Flower extends Product implements Serializable {
 			+ this.getQuantity();
 	}
 	
+	public Flower getProductCopy(int quantity) {
+		return new Flower(
+			this.getName(), 
+			this.getPrice(), 
+			this.getColor(), 
+			quantity);
+	}
+	
 }

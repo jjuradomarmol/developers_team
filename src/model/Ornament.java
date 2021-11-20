@@ -46,4 +46,12 @@ public class Ornament extends Product implements Serializable  {
 			"€ || material: " + this.getMaterial() + " || cantidad: " 
 			+ this.getQuantity();
 	}
+	
+	public Ornament getProductCopy(int quantity) throws MaterialTypeException {
+		return new Ornament(
+			this.getName(), 
+			this.getPrice(), 
+			this.getMaterial(), 
+			quantity);
+	}
 }

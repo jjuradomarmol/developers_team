@@ -30,4 +30,11 @@ public class Tree extends Product implements Serializable {
 			+ this.getQuantity();
 	}
 	
+	public Tree getProductCopy(int quantity) {
+		return new Tree(
+			this.getName(), 
+			this.getPrice(), 
+			this.getHeight(), 
+			quantity);
+	}
 }

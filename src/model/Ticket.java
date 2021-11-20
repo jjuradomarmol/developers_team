@@ -11,17 +11,14 @@ public class Ticket implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	/**
-	 * 
-	 */
+
 	private static Ticket instance;
-	private static int id;
-	private static Stock stock = Stock.getInstance();
-	private static HashMap<Integer, ArrayList<Product>> tickets = 
-		new HashMap<Integer, ArrayList<Product>>();
-	private static int count = 0;
+	private HashMap<Integer, ArrayList<Product>> tickets;
+	private ArrayList<Product> tempProductList;
 	
 	private Ticket() {
+		this.tickets = new HashMap<Integer, ArrayList<Product>>();
+		this.tempProductList = new ArrayList<Product>();
 	}
 	
 	public static Ticket getInstance() {
@@ -31,52 +28,44 @@ public class Ticket implements Serializable {
 		return instance;
 	}
 	
-	public static void addTicket(ArrayList<Product> products) 
-			throws IOException {
-		Ticket.id = setCount(getCount() + 1);
-		Ticket.tickets.put(id, products);
-		for(Product product : products) {
-			if (product instanceof Flower) {
-				stock.deleteFlower((Flower) product);
-			} else if (product instanceof Ornament) {
-				stock.deleteOrnament((Ornament) product);
-			} else if (product instanceof Tree) {
-				stock.deleteTree((Tree) product);
-			}
-		}
+	public ArrayList<Product> generateTicket() throws IOException {
+		int id = this.tickets.keySet().size() + 1;
+		this.tickets.put(id, this.tempProductList);
+		return this.tempProductList;
+	}
+	
+	public void clearTempProductList() {
+		this.tempProductList = new ArrayList<Product>();
 	}
 	
 	public double totalTickets() {
 		double result = 0.0;
-		for (int i : Ticket.tickets.keySet()) {
-			for (Product product : Ticket.tickets.get(i)) {
-				result += product.getPrice();
+		for (int i : this.tickets.keySet()) {
+			for (Product product : this.tickets.get(i)) {
+				result += product.getPrice() * product.getQuantity();
 			}
 		}
 		return result;
-	}
-
-	public static int getCount() {
-		return count;
-	}
-
-	public static int setCount(int count) {
-		Ticket.count = count;
-		return count;
 	}
 	
 	@Override
 	public String toString() {
 		String result = "Lista de tickets: ";
-		for (int i : Ticket.tickets.keySet()) {
+		for (int i : this.tickets.keySet()) {
 			  result += "\n\tTicket nº " + i + ":";
-		for (Product product : Ticket.tickets.get(i)) {
-			result += "\n\t\tProducto: " + product.getName() + ", "
-					+ "Precio: " + product.getPrice() + "€";
+		for (Product product : this.tickets.get(i)) {
+			result += "\n\t\tProducto: " + product.getName() + ", cantidad: " +
+					product.getQuantity()+ ", precio por unidad: " +
+					product.getPrice() + "€, total: " + 
+					product.getPrice() * product.getQuantity() + "€.";
 		}
 		result += "\n";
 		}
 		return result;
+	}
+
+	public void addProductToTempList(Product product) {
+		this.tempProductList.add(product);
 	}
 
 }
