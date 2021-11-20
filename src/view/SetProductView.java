@@ -104,12 +104,12 @@ public class SetProductView {
 		System.out.println("¿Cuántos productos de este tipo desea añadir?");
 		try {
 			int quantity = Integer.parseInt(sc.nextLine());
-			if (min >= quantity) {
+			if (min > quantity) {
 				throw new NumberException("Introduzca al menos " + min +":");
 			} else if (quantity >= max) {
 				throw new NumberException("Ha intentado añadir demasiados"
 						+ " productos.\nNo se pueden añadir más de " + max 
-						+ "productos iguales de una vez.");
+						+ " productos iguales de una vez.");
 			}
 			return quantity;
 		} catch (NumberFormatException e) {

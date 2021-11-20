@@ -165,18 +165,27 @@ public class FloristApp {
 				break;
 		}
 		int quantity = getQuantityToAdd(sc, 1, 500);
+		
 		try {
-			String addedProduct = new ProductController()
-				.createProduct(name, price, height, color, material, quantity);
-			System.out.println("Producto añadido correctamente.\n"
-				+ addedProduct);
+			int exists = new ProductController()
+				.checkExistance(name, price, height, color, material, quantity);
+			if (exists == -1) {
+				new ProductController()
+					.addProduct(name, price, height, color, material, quantity);
+			} else if (exists >= 0) {
+				new ProductController()
+					.updateQuantity(option, exists, quantity);
+			} else {
+				throw new ProductTypeException("No se ha podido "
+					+ "añadir el producto");
+			}
+			System.out.println("Producto añadido correctamente.");
 		} catch (MaterialTypeException e) {
 			System.out.println("No se ha podido añadir el producto. "
 				+ e.getMessage());
 			setProduct(sc, option);
 		} catch (ProductTypeException e ) {
-			System.out.println("No se ha podido añadir el producto. "
-				+ e.getMessage());
+			System.out.println(e.getMessage());
 		}
 	}
 
@@ -205,9 +214,8 @@ public class FloristApp {
 			if (available == quantityToRemove) {
 				new ProductController().removeProduct(num, index);
 			} else if (available > quantityToRemove) {
-				int newQuantity = available - quantityToRemove;
 				new ProductController()
-					.updateQuantity(num, index, newQuantity);
+					.updateQuantity(num, index, quantityToRemove*(-1));
 			} else {
 				System.out.println("No se puede eliminar la cantidad indicada");
 				return;
