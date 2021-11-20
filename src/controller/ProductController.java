@@ -58,20 +58,6 @@ public class ProductController {
 		//add try and catch
 		//new StocksController().saveStock();
 	}
-	
-	public Product getProduct(int i, String name) {
-		Product product;
-		if (i == 1) {
-			product = Stock.getInstance().getTree(name);
-		} else if (i == 2) {
-			product = Stock.getInstance().getFlower(name);
-		} else if (i == 3) {
-			product = Stock.getInstance().getOrnament(name);
-		} else {
-			product = null;
-		}
-		return product;
-	}
 
 	public ProductListControllerResponse getProductList(int i) {
 		String productList = "";

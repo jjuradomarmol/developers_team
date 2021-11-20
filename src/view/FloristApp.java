@@ -2,13 +2,11 @@ package view;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import controller.*;
 import model.MaterialTypeException;
 import model.Ornament;
-import model.Product;
 import model.ProductTypeException;
 import model.Stock;
 import static view.SetProductView.*;
@@ -17,6 +15,7 @@ public class FloristApp {
 
 	public static void main(String[] args) throws IOException {
 		
+		//Products for testing
 		try {
 			Stock.getInstance().addOrnament(new Ornament ("Yoyo", 12, "madera", 3));
 			Stock.getInstance().addOrnament(new Ornament ("Jarrón", 12, "plástico", 4));
@@ -68,7 +67,7 @@ public class FloristApp {
 						+ new StockController().showStockValue() + " euros.");
 					break;
 				case 7:
-					createTicket();
+					createTicket(sc);
 					break;
 				case 8:
 					System.out.println(new TicketController()
@@ -85,49 +84,77 @@ public class FloristApp {
 					break;		
 				}
 			if (num != 10) {
-				ask = stay(sc);
+				ask = stay(sc, "realizando operaciones");
 			}
 		}
-		
+		System.out.println("¡Hasta pronto!");
 		sc.close();
 	}
 
-	private static void createTicket() throws IOException {
-		ProductController productsController = new ProductController();
-		
-		ArrayList<Product> productos = new ArrayList<>();
+	private static void createTicket(Scanner sc) {
 		boolean buyFlag = true;
-		int categoria;
-		String nombre;
-		Product product;
-		String seguir;
-		
-		Scanner sc = new Scanner(System.in);
-		
 		while (buyFlag) {
-			System.out.println("Indique 1 para comprar un Ã¡rbol, "
-					+ "2 para comprar una flor o 3 para comprar una decoraciÃ³n:");
-			categoria = Integer.parseInt(sc.nextLine());
-			
-			System.out.println("Indique el nombre del producto:");
-			nombre = sc.nextLine();
-			
-			product = productsController.getProduct(categoria, nombre);
-			
-			if (product != null) {
-				productos.add(product);
+			selectProduct("comprar");
+			int num = selectNumericOption(sc, 1, 3);
+			ProductListControllerResponse response = 
+					new ProductController().getProductList(num);
+			if (response.getArrayListSize() == 0) {
+				System.out.println("No hay existencias disponibles.");
+				continue;
 			}
-			
-			System.out.println("Â¿Quiere seguir comprando? (sÃ­/no)");
-			seguir = sc.nextLine();
-			
-			if (!seguir.equalsIgnoreCase("sÃ­") || !seguir.equalsIgnoreCase("sÃ­")) {
-				buyFlag = false;
+			System.out.println("Estos son los artículos disponibles:");
+			System.out.println(response.getListToPrint());
+			System.out.println("Introduzca el número del artículo a comprar:");
+			int index = (selectNumericOption(
+				sc, 
+				1, 
+				response.getArrayListSize()
+			)) - 1;
+			int available;
+			try {
+				available = 
+					new StockController().getProductQuantity(num, index);
+				System.out.println("Hay " + available + 
+					" productos disponibles.\n¿Cuántos desea comprar?");
+				int quantityToBuy = selectNumericOption(sc, 1, available);
+				new TicketController()
+					.addProductToTempTicket(num, index, quantityToBuy);
+				if (available == quantityToBuy) {
+					new ProductController().removeProduct(num, index);
+				} else if (available > quantityToBuy) {
+					new ProductController()
+						.updateQuantity(num, index, quantityToBuy*(-1));
+				} else {
+					System.out.println("No se puede comprar "
+						+ "la cantidad indicada");
+					return;
+				}
+				System.out.println("El producto se ha añadido "
+						+ "a la lista de compra correctamente.");
+			} catch (ProductTypeException e) {
+				System.out.println("No se ha podido añadir el producto "
+						+ "a la lista de compra."
+						+ e.getMessage());
+				new TicketController().clearTempProductList();
+			} catch (Exception e) {
+				System.out.println("No se ha podido añadir el producto "
+						+ "a la lista de compra.");
+				e.getStackTrace();
+				new TicketController().clearTempProductList();
 			}
-		};
-		
-		new TicketController().addTicket(productos);
-		sc.close();
+			buyFlag = stay (sc, "comprando");
+		}
+		try {
+			String ticket = new TicketController().generateTicket();
+			System.out.println("Compra realizada correctamente. "
+				+ "Aquí tiene su ticket:");
+			System.out.print(ticket);
+		} catch (IOException e) {
+			new TicketController().clearTempProductList();
+			System.out.println("No se ha podido añadir el producto "
+					+ "a la lista de compra.");
+			e.getStackTrace();
+		}
 	}
 	
 	private static void createFlorist(Scanner sc) throws IOException {
@@ -248,8 +275,8 @@ public class FloristApp {
 		}
 	}
 	
-	private static boolean stay(Scanner sc) {
-		System.out.println("¿Quiere seguir realizando operaciones? (sí/no)");
+	private static boolean stay(Scanner sc, String s) {
+		System.out.println("¿Quiere seguir " + s + "? (sí/no)");
 		String option = sc.nextLine();
 		if (option.equalsIgnoreCase("sí") || option.equalsIgnoreCase("si")) {
 			return true;
@@ -257,7 +284,7 @@ public class FloristApp {
 			return false;
 		} else {
 			System.out.println("Debe introducir una de las opciones (sí/no).");
-			return stay(sc);
+			return stay(sc, s);
 		}
 	}
 }
