@@ -4,10 +4,8 @@ import java.io.Serializable;
 
 public class Tree extends Product implements Serializable {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
 	private Double height;
 	
 	public Tree(String name, double price, Double height, int quantity) {

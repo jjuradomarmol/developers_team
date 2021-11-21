@@ -1,31 +1,26 @@
 package controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 import model.Florist;
+import model.RepositoryException;
 
 public class FloristController {
 	
-	public static Florist readFlorist() throws IOException, ClassNotFoundException {
-        File f = new File("./src/base_datos.txt");
-        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
-        Florist florist = (Florist) ois.readObject();
-        ois.close();
-        return florist;
-    }
+	public boolean createFlorist(String name)
+		throws IOException, RepositoryException {
+		try {
+			Florist florist = RepositoryFactory.getRepository().findFlorist();
+			Florist.setInstance(florist);
+			return false;			
+		} catch (Exception e) {
+			Florist.getInstance().setName(name);
+			RepositoryFactory.getRepository().addFlorist(Florist.getInstance());
+			return true;
+		}
+	}
 	
-	public static void createFlorist(String name) throws IOException {
-		Florist florist = Florist.getInstance(name);
-        File f = new File("./src/base_datos.txt");
-        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f));
-        oos.writeObject(florist);
-        oos.flush();
-        oos.close();
-    }
-	
+	public String getFloristName() {
+		return Florist.getInstance().getName();
+	}
 }

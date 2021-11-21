@@ -4,9 +4,6 @@ import java.io.Serializable;
 
 public class Florist implements Serializable{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private static Florist instance;
@@ -17,17 +14,20 @@ public class Florist implements Serializable{
 	
 	private Ticket ticket;
 	
-	private Florist(String name) {
-		this.name = name;
-		this.stock = Stock.getInstance();
-		this.ticket = Ticket.getInstance();
+	private Florist() {
+		this.stock = new Stock();
+		this.ticket = new Ticket();
 	}
 	
-	public static Florist getInstance(String name) {
+	public static Florist getInstance() {
 		if (instance == null) {
-			instance = new Florist(name);
+			instance = new Florist();
 		}
 		return instance;
+	}
+	
+	public static void setInstance(Florist florist) {
+		instance = florist;
 	}
 
 	public String getName() {
