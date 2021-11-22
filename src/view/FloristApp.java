@@ -5,23 +5,21 @@ import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import controller.*;
+import model.Florist;
 import model.MaterialTypeException;
 import model.Ornament;
 import model.ProductTypeException;
-import model.Stock;
 import static view.SetProductView.*;
 
 public class FloristApp {
 
 	public static void main(String[] args) throws IOException {
 		
-		//Products for testing
-		try {
-			Stock.getInstance().addOrnament(new Ornament ("Yoyo", 12, "madera", 3));
-			Stock.getInstance().addOrnament(new Ornament ("Jarrón", 12, "plástico", 4));
-		} catch (MaterialTypeException e) {
-			e.printStackTrace();
-		}
+		//First select a database and create a florist.
+		
+		RepositoryFactory.selectRepository("txt");
+		//RepositoryFactory.selectRepository("mySQL");
+		//RepositoryFactory.selectRepository("mongoDB");
 		
 		Scanner sc = new Scanner(System.in);
 		boolean ask = true;
@@ -91,6 +89,78 @@ public class FloristApp {
 		sc.close();
 	}
 
+	private static void createFlorist(Scanner sc) throws IOException {
+		System.out.println("Escriba el nombre de la floristeria "
+				+ "que desea crear:");
+		String name = sc.nextLine();
+		boolean newFlorist;
+		try {
+			newFlorist = new FloristController().createFlorist(name);
+			if (newFlorist) {
+			System.out.println("La floristeria " + name + 
+				" se ha creado correctamente.");
+			} else {
+				System.out.println("No se ha podido crear la floristeria " 
+				+ name + ".\nYa existe la floristeria " 
+				+ new FloristController().getFloristName());
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	private static void selectProduct(String operation) {
+		System.out.println("Seleccione el tipo de producto que desea "
+				+ operation + ":\n"
+				+ "1. Árbol\n"
+				+ "2. Flor\n"
+				+ "3. Adorno");
+	}
+	
+	private static void setProduct(Scanner sc, int option) 
+		throws FileNotFoundException, IOException {
+		String name = SetProductView.getProductName(sc);
+		double price = SetProductView.getProductPrice(sc);
+		Double height = null;
+		String color = null, material = null;
+		switch (option) {
+			case 1:
+				height = SetProductView.getProductHeight(sc);
+				break;
+			case 2:
+				color = SetProductView.getProductColor(sc);
+				break;
+			case 3:
+				material = SetProductView.getProductMaterial(sc);
+				break;
+		}
+		int quantity = getQuantityToAdd(sc, 1, 500);
+		
+		try {
+			int exists = new ProductController()
+				.checkExistance(name, price, height, color, material, quantity);
+			if (exists == -1) {
+				new ProductController()
+					.addProduct(name, price, height, color, material, quantity);
+			} else if (exists >= 0) {
+				new ProductController()
+					.updateQuantity(option, exists, quantity);
+			} else {
+				throw new ProductTypeException("No se ha podido "
+					+ "añadir el producto");
+			}
+			System.out.println("Producto añadido correctamente.");
+		} catch (MaterialTypeException e) {
+			System.out.println("No se ha podido añadir el producto. "
+				+ e.getMessage());
+			setProduct(sc, option);
+		} catch (ProductTypeException e) {
+			System.out.println(e.getMessage());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
 	private static void createTicket(Scanner sc) {
 		boolean buyFlag = true;
 		while (buyFlag) {
@@ -157,65 +227,6 @@ public class FloristApp {
 		}
 	}
 	
-	private static void createFlorist(Scanner sc) throws IOException {
-		System.out.println("Escriba el nombre de la floristeria "
-				+ "que desea crear:");
-		String name = sc.nextLine();
-		FloristController.createFlorist(name);
-		System.out.println("La floristeria " + name + 
-				" se ha creado correctamente.");
-	}
-	
-	private static void selectProduct(String operation) {
-		System.out.println("Seleccione el tipo de producto que desea "
-				+ operation + ":\n"
-				+ "1. Árbol\n"
-				+ "2. Flor\n"
-				+ "3. Adorno");
-	}
-	
-	private static void setProduct(Scanner sc, int option) 
-		throws FileNotFoundException, IOException {
-		String name = SetProductView.getProductName(sc);
-		double price = SetProductView.getProductPrice(sc);
-		Double height = null;
-		String color = null, material = null;
-		switch (option) {
-			case 1:
-				height = SetProductView.getProductHeight(sc);
-				break;
-			case 2:
-				color = SetProductView.getProductColor(sc);
-				break;
-			case 3:
-				material = SetProductView.getProductMaterial(sc);
-				break;
-		}
-		int quantity = getQuantityToAdd(sc, 1, 500);
-		
-		try {
-			int exists = new ProductController()
-				.checkExistance(name, price, height, color, material, quantity);
-			if (exists == -1) {
-				new ProductController()
-					.addProduct(name, price, height, color, material, quantity);
-			} else if (exists >= 0) {
-				new ProductController()
-					.updateQuantity(option, exists, quantity);
-			} else {
-				throw new ProductTypeException("No se ha podido "
-					+ "añadir el producto");
-			}
-			System.out.println("Producto añadido correctamente.");
-		} catch (MaterialTypeException e) {
-			System.out.println("No se ha podido añadir el producto. "
-				+ e.getMessage());
-			setProduct(sc, option);
-		} catch (ProductTypeException e ) {
-			System.out.println(e.getMessage());
-		}
-	}
-
 	private static void selectProductToRemove(Scanner sc) {
 		int num = selectNumericOption(sc, 1, 3);
 		ProductListControllerResponse response = 

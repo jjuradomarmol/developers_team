@@ -7,25 +7,19 @@ import java.util.HashMap;
 
 public class Ticket implements Serializable {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	private static Ticket instance;
 	private HashMap<Integer, ArrayList<Product>> tickets;
+
 	private ArrayList<Product> tempProductList;
 	
-	private Ticket() {
+	public Ticket() {
 		this.tickets = new HashMap<Integer, ArrayList<Product>>();
 		this.tempProductList = new ArrayList<Product>();
 	}
 	
-	public static Ticket getInstance() {
-		if (instance == null) {
-			instance = new Ticket();
-		}
-		return instance;
+	public HashMap<Integer, ArrayList<Product>> getTickets() {
+		return tickets;
 	}
 	
 	public ArrayList<Product> generateTicket() throws IOException {
@@ -52,14 +46,16 @@ public class Ticket implements Serializable {
 	public String toString() {
 		String result = "Lista de tickets: ";
 		for (int i : this.tickets.keySet()) {
-			  result += "\n\tTicket nº " + i + ":";
-		for (Product product : this.tickets.get(i)) {
-			result += "\n\t\tProducto: " + product.getName() + ", cantidad: " +
-					product.getQuantity()+ ", precio por unidad: " +
-					product.getPrice() + "€, total: " + 
-					product.getPrice() * product.getQuantity() + "€.";
-		}
-		result += "\n";
+			double total = 0;
+			result += "\n\tTicket nº " + i + ":";
+			for (Product product : this.tickets.get(i)) {
+				result += "\n\t\tProducto: " + product.getName() + 
+				", cantidad: " + product.getQuantity()+ 
+				", precio por unidad: " + product.getPrice() + "€, total: " 
+				+ product.getPrice() * product.getQuantity() + "€.";
+				total += product.getPrice() * product.getQuantity();
+			}
+			result += "\n\t\tTotal: " + total + "€.\n";
 		}
 		return result;
 	}

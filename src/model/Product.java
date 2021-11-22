@@ -5,9 +5,6 @@ import java.util.UUID;
 
 public abstract class Product implements Serializable {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	protected String name;
 	protected double price;
