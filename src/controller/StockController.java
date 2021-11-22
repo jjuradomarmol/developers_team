@@ -1,7 +1,6 @@
 package controller;
 
 import model.Florist;
-import model.ProductTypeException;
 import model.Stock;
 
 public class StockController {
@@ -21,17 +20,15 @@ public class StockController {
 		return Florist.getInstance().getStock().getTotalStockValue();
 	}
 	
-	public int getProductQuantity(int i, int index) 
-		throws ProductTypeException {
+	public boolean checkStockIsEmpty() {
 		Stock stock = Florist.getInstance().getStock();
-		if (i == 1) {
-			return stock.getTreeStock().get(index).getQuantity();
-		} else if (i == 2) {
-			return stock.getFlowerStock().get(index).getQuantity();
-		} else if (i == 3) {
-			return stock.getOrnamentStock().get(index).getQuantity();
+		if (stock.getTreeStock().isEmpty()
+			&& stock.getFlowerStock().isEmpty()
+			&& stock.getOrnamentStock().isEmpty()) {
+			return true;
+		} else {
+			return false;
 		}
-		throw new ProductTypeException("Producto no reconocido.");
 	}
 
 }
