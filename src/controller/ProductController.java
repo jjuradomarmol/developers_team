@@ -121,10 +121,10 @@ public class ProductController {
 			throw new ProductTypeException("Producto no reconocido.");
 		}
 		product.setQuantity(product.getQuantity() + quantity);
-		RepositoryFactory.getRepository().updateProduct(product);;
+		RepositoryFactory.getRepository().updateProduct(product);
 	}
 
-	public int checkExistance(
+	public int getIndex(
 		String name,
 		double price,
 		Double height,
@@ -168,4 +168,17 @@ public class ProductController {
 		return -1;
 	}
 	
+	public int getProductQuantity(int i, int index) 
+			throws ProductTypeException {
+			Stock stock = Florist.getInstance().getStock();
+			if (i == 1) {
+				return stock.getTreeStock().get(index).getQuantity();
+			} else if (i == 2) {
+				return stock.getFlowerStock().get(index).getQuantity();
+			} else if (i == 3) {
+				return stock.getOrnamentStock().get(index).getQuantity();
+			}
+			throw new ProductTypeException("Producto no reconocido.");
+		}
+
 }

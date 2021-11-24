@@ -2,9 +2,7 @@ package view;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
-
 import model.MaterialTypeException;
-
 
 public class SetProductView {
 	
@@ -34,12 +32,11 @@ public class SetProductView {
 		} catch (NumberFormatException e) {
 			System.out.println("No ha introducido un número."
 					+ " Introduzca un número válido:");
-			return getProductPrice(sc);
 		} catch (InputMismatchException e) {
 			System.out.println("Ha introducido un precio demasiado bajo"
 				+ " o demasiado alto.");
-			return getProductPrice(sc);
 		}
+		return getProductPrice(sc);
 	}
 	
 	protected static double getProductHeight(Scanner sc) {
@@ -53,11 +50,10 @@ public class SetProductView {
 		} catch (NumberFormatException e) {
 			System.out.println("No ha introducido un número."
 					+ " Introduzca un número válido:");
-			return getProductHeight(sc);
 		} catch (InputMismatchException e) {
 			System.out.println("Un árbol no puede ser tan bajo/alto");
-			return getProductHeight(sc);
 		}
+		return getProductHeight(sc);
 	}
 	
 	protected static String getProductColor(Scanner sc) {
@@ -92,12 +88,11 @@ public class SetProductView {
 			}
 			return material;
 		} catch (InputMismatchException e) {
-			System.out.println(e.getMessage());
-			return getProductMaterial(sc);
+			System.out.println(e.getMessage());	
 		} catch (MaterialTypeException e) {
 			System.out.println(e.getMessage());
-			return getProductMaterial(sc);
 		}
+		return getProductMaterial(sc);
 	}
 	
 	public static int getQuantityToAdd(Scanner sc, int min, int max) {
@@ -115,11 +110,10 @@ public class SetProductView {
 		} catch (NumberFormatException e) {
 			System.out.println("No ha introducido un número."
 					+ " Introduzca un número válido:");
-			return getQuantityToAdd(sc, min, max);
 		} catch (NumberException e) {
 			System.out.println(e.getMessage());
-			return getQuantityToAdd(sc, min, max);
 		}
+		return getQuantityToAdd(sc, min, max);
 	}
 	
 	public static boolean onlyHasLetters(String s) {

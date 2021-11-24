@@ -5,17 +5,12 @@ import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import controller.*;
-import model.Florist;
 import model.MaterialTypeException;
-import model.Ornament;
-import model.ProductTypeException;
-import static view.SetProductView.*;
+import model.RepositoryException;
 
 public class FloristApp {
 
 	public static void main(String[] args) throws IOException {
-		
-		//First select a database and create a florist.
 		
 		RepositoryFactory.selectRepository("txt");
 		//RepositoryFactory.selectRepository("mySQL");
@@ -23,16 +18,16 @@ public class FloristApp {
 		
 		Scanner sc = new Scanner(System.in);
 		boolean ask = true;
-		
+
 		System.out.print("Bienvenido/a. ");
 		while (ask) {
 			System.out.println("¿Qué desea hacer?\n"
-					+ "1. Crear una floristeria\n"
+					+ "1. Crear una floristería\n"
 					+ "2. Añadir un producto\n"
 					+ "3. Retirar un producto\n"
 					+ "4. Ver productos\n"
-					+ "5. Ver número de productos disponibles por categoria\n"
-					+ "6. Ver el valor de la floristeria\n"
+					+ "5. Ver número de productos disponibles por categoría\n"
+					+ "6. Ver el valor de la floristería\n"
 					+ "7. Comprar\n"
 					+ "8. Ver historial de compras\n"
 					+ "9. Ver ganancias\n"
@@ -50,6 +45,11 @@ public class FloristApp {
 					setProduct(sc, (selectNumericOption(sc, 1, 3)));
 					break;
 				case 3:
+					if (new StockController().checkStockIsEmpty()) {
+						System.out.println("Lo sentimos, "
+							+ "no hay productos disponibles.");
+						return;
+					}
 					selectProduct("retirar");
 					selectProductToRemove(sc);
 					break;
@@ -72,10 +72,8 @@ public class FloristApp {
 						.showTickets());
 					break;
 				case 9:
-					double income = new TicketController().getIncome();
-					System.out.println(
-						"Valor total de las ventas: " + income + "€"
-					);
+					System.out.println("Valor total de las ventas: " 
+						+ new TicketController().getIncome() + "€");
 					break;
 				case 10:
 					ask = false;
@@ -90,18 +88,18 @@ public class FloristApp {
 	}
 
 	private static void createFlorist(Scanner sc) throws IOException {
-		System.out.println("Escriba el nombre de la floristeria "
+		System.out.println("Escriba el nombre de la floristería "
 				+ "que desea crear:");
 		String name = sc.nextLine();
 		boolean newFlorist;
 		try {
 			newFlorist = new FloristController().createFlorist(name);
 			if (newFlorist) {
-			System.out.println("La floristeria " + name + 
+			System.out.println("La floristería " + name + 
 				" se ha creado correctamente.");
 			} else {
-				System.out.println("No se ha podido crear la floristeria " 
-				+ name + ".\nYa existe la floristeria " 
+				System.out.println("No se ha podido crear la floristería " 
+				+ name + ".\nYa existe la floristería " 
 				+ new FloristController().getFloristName());
 			}
 		} catch (Exception e) {
@@ -134,28 +132,22 @@ public class FloristApp {
 				material = SetProductView.getProductMaterial(sc);
 				break;
 		}
-		int quantity = getQuantityToAdd(sc, 1, 500);
-		
+		int quantity = SetProductView.getQuantityToAdd(sc, 1, 500);
 		try {
-			int exists = new ProductController()
-				.checkExistance(name, price, height, color, material, quantity);
-			if (exists == -1) {
+			int index = new ProductController()
+				.getIndex(name, price, height, color, material, quantity);
+			if (index == -1) {
 				new ProductController()
 					.addProduct(name, price, height, color, material, quantity);
-			} else if (exists >= 0) {
+			} else if (index >= 0) {
 				new ProductController()
-					.updateQuantity(option, exists, quantity);
-			} else {
-				throw new ProductTypeException("No se ha podido "
-					+ "añadir el producto");
+					.updateQuantity(option, index, quantity);
 			}
 			System.out.println("Producto añadido correctamente.");
 		} catch (MaterialTypeException e) {
 			System.out.println("No se ha podido añadir el producto. "
 				+ e.getMessage());
 			setProduct(sc, option);
-		} catch (ProductTypeException e) {
-			System.out.println(e.getMessage());
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -163,11 +155,16 @@ public class FloristApp {
 
 	private static void createTicket(Scanner sc) {
 		boolean buyFlag = true;
+		if (new StockController().checkStockIsEmpty()) {
+			System.out.println("Lo sentimos, no hay productos disponibles.");
+			return;
+		}
+		new TicketController().addNewTicket();
 		while (buyFlag) {
 			selectProduct("comprar");
 			int num = selectNumericOption(sc, 1, 3);
 			ProductListControllerResponse response = 
-					new ProductController().getProductList(num);
+				new ProductController().getProductList(num);
 			if (response.getArrayListSize() == 0) {
 				System.out.println("No hay existencias disponibles.");
 				continue;
@@ -180,18 +177,19 @@ public class FloristApp {
 				1, 
 				response.getArrayListSize()
 			)) - 1;
-			int available;
 			try {
-				available = 
-					new StockController().getProductQuantity(num, index);
+				int available = 
+					new ProductController().getProductQuantity(num, index);
 				System.out.println("Hay " + available + 
 					" productos disponibles.\n¿Cuántos desea comprar?");
 				int quantityToBuy = selectNumericOption(sc, 1, available);
-				new TicketController()
-					.addProductToTempTicket(num, index, quantityToBuy);
 				if (available == quantityToBuy) {
+					new TicketController()
+						.addProductToTicket(num, index, quantityToBuy);
 					new ProductController().removeProduct(num, index);
 				} else if (available > quantityToBuy) {
+					new TicketController()
+						.addProductToTicket(num, index, quantityToBuy);
 					new ProductController()
 						.updateQuantity(num, index, quantityToBuy*(-1));
 				} else {
@@ -200,30 +198,24 @@ public class FloristApp {
 					return;
 				}
 				System.out.println("El producto se ha añadido "
-						+ "a la lista de compra correctamente.");
-			} catch (ProductTypeException e) {
+					+ "a la lista de compra correctamente.");
+			}  catch (Exception e) {
 				System.out.println("No se ha podido añadir el producto "
-						+ "a la lista de compra."
-						+ e.getMessage());
-				new TicketController().clearTempProductList();
-			} catch (Exception e) {
-				System.out.println("No se ha podido añadir el producto "
-						+ "a la lista de compra.");
-				e.getStackTrace();
-				new TicketController().clearTempProductList();
+					+ "a la lista de compra." + e.getMessage());
 			}
-			buyFlag = stay (sc, "comprando");
+			buyFlag = stay(sc, "comprando");
+			if (buyFlag && new StockController().checkStockIsEmpty()) {
+				System.out.println("Lo sentimos, "
+					+ "no quedan productos disponibles.");
+				buyFlag = false;
+			}
 		}
+		System.out.println("Compra realizada correctamente. "
+			+ "Aquí tiene su ticket:");
 		try {
-			String ticket = new TicketController().generateTicket();
-			System.out.println("Compra realizada correctamente. "
-				+ "Aquí tiene su ticket:");
-			System.out.print(ticket);
-		} catch (IOException e) {
-			new TicketController().clearTempProductList();
-			System.out.println("No se ha podido añadir el producto "
-					+ "a la lista de compra.");
-			e.getStackTrace();
+			System.out.println(new TicketController().generateTicket());
+		} catch (RepositoryException e) {
+			System.out.println(e.getMessage());
 		}
 	}
 	
@@ -243,9 +235,9 @@ public class FloristApp {
 			1, 
 			response.getArrayListSize()
 		)) - 1;
-		int available;
 		try {
-			available = new StockController().getProductQuantity(num, index);
+			int available =
+				new ProductController().getProductQuantity(num, index);
 			System.out.println("Hay " + available + " productos disponibles.\n"
 				+ "¿Cuántos desea eliminar?");
 			int quantityToRemove = selectNumericOption(sc, 1, available);
@@ -259,12 +251,9 @@ public class FloristApp {
 				return;
 			}
 			System.out.println("El producto se ha retirado correctamente.");
-		} catch (ProductTypeException e) {
-			System.out.println("No se ha podido retirar el producto. "
-					+ e.getMessage());
 		} catch (Exception e) {
-			System.out.println("No se ha podido retirar el producto.");
-			e.getStackTrace();
+			System.out.println("No se ha podido retirar el producto. "
+				+ e.getMessage());
 		}
 	}
 	
@@ -278,12 +267,11 @@ public class FloristApp {
 		} catch (NumberFormatException e) {
 			System.out.println("No ha introducido un número."
 					+ " Introduzca un número válido:");
-			return selectNumericOption(sc, min, max);
 		} catch (InputMismatchException e) {
 			System.out.println("No ha introducido un número válido."
 					+ " Introduzca un número entre " + min + " y " + max + ":");
-			return selectNumericOption(sc, min, max);
 		}
+		return selectNumericOption(sc, min, max);
 	}
 	
 	private static boolean stay(Scanner sc, String s) {

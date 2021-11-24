@@ -2,7 +2,7 @@ package model;
 
 import java.io.Serializable;
 
-public class Florist implements Serializable{
+public class Florist implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -12,11 +12,11 @@ public class Florist implements Serializable{
 	
 	private Stock stock;
 	
-	private Ticket ticket;
+	private TicketCollection ticketCollection;
 	
 	private Florist() {
 		this.stock = new Stock();
-		this.ticket = new Ticket();
+		this.ticketCollection = new TicketCollection();
 	}
 	
 	public static Florist getInstance() {
@@ -42,8 +42,8 @@ public class Florist implements Serializable{
 		return stock;
 	}
 	
-	public Ticket getTicket() {
-		return ticket;
+	public TicketCollection getTicketCollection() {
+		return ticketCollection;
 	}
 	
 	@Override
