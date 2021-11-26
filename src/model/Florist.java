@@ -8,7 +8,7 @@ public class Florist implements Serializable {
 
 	private static Florist instance;
 	
-	private String name;
+	private static String name;
 	
 	private Stock stock;
 	
@@ -30,7 +30,7 @@ public class Florist implements Serializable {
 		instance = florist;
 	}
 
-	public String getName() {
+	public static String getName() {
 		return name;
 	}
 
@@ -39,16 +39,21 @@ public class Florist implements Serializable {
 	}
 
 	public Stock getStock() {
-		return stock;
+		return this.stock;
+	}
+	
+	public void resetFlorist() {
+		this.stock = new Stock();
+		this.ticketCollection = new TicketCollection();
 	}
 	
 	public TicketCollection getTicketCollection() {
-		return ticketCollection;
+		return this.ticketCollection;
 	}
 	
 	@Override
 	public String toString() {
-		return "La floristería " + this.getName() + " tiene un stock de: \n" + 
+		return "La floristería " + getName() + " tiene un stock de: \n" + 
 				this.stock.toString() + "\tCon un valor total de " + 
 				this.stock.getTotalStockValue() + "€";
 	}

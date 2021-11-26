@@ -8,15 +8,10 @@ public class FloristController {
 	
 	public boolean createFlorist(String name)
 		throws IOException, RepositoryException {
-		try {
-			Florist florist = RepositoryFactory.getRepository().findFlorist();
-			Florist.setInstance(florist);
-			return false;			
-		} catch (Exception e) {
 			Florist.getInstance().setName(name);
+			Florist.getInstance().resetFlorist();
 			RepositoryFactory.getRepository().addFlorist(Florist.getInstance());
 			return true;
-		}
 	}
 	
 	public String getFloristName() {

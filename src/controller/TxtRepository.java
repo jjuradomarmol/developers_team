@@ -9,23 +9,24 @@ import java.io.ObjectOutputStream;
 import model.Florist;
 import model.Product;
 import model.RepositoryException;
-import model.RepositoryInterface;
 import model.Ticket;
 
 public class TxtRepository implements RepositoryInterface {
 
 	@Override
 	public Florist findFlorist() throws RepositoryException {
+		Florist florist = null;
 		try {
 			File f = new File("./src/database.txt");
 			ObjectInputStream ois =
 				new ObjectInputStream(new FileInputStream(f));
-			Florist florist = (Florist) ois.readObject();
+			florist = (Florist) ois.readObject();
 			ois.close();
-			return florist;
 		} catch (Exception e) {
 			throw new RepositoryException("Ha ocurrido un error "
 				+ "al intentar recuperar la floristeria de la base de datos.");
+		} finally {
+			return florist;
 		}
 	}
 

@@ -1,4 +1,9 @@
-package model;
+package controller;
+
+import model.Florist;
+import model.Product;
+import model.RepositoryException;
+import model.Ticket;
 
 public interface RepositoryInterface {
 	

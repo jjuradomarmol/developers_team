@@ -2,7 +2,6 @@ package controller;
 
 import model.Florist;
 import model.Product;
-import model.RepositoryInterface;
 import model.Ticket;
 
 public class MongoDBRepository implements RepositoryInterface {

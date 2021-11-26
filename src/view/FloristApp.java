@@ -5,12 +5,13 @@ import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import controller.*;
+import model.Florist;
 import model.MaterialTypeException;
 import model.RepositoryException;
 
 public class FloristApp {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, RepositoryException {
 		
 		RepositoryFactory.selectRepository("txt");
 		//RepositoryFactory.selectRepository("mySQL");
@@ -18,11 +19,20 @@ public class FloristApp {
 		
 		Scanner sc = new Scanner(System.in);
 		boolean ask = true;
+		
+		
+		Florist florist = RepositoryFactory.getRepository().findFlorist();
+		if (florist == null) {
+			createFlorist(sc);
+		} else {
+			Florist.setInstance(florist);
+		}
 
 		System.out.print("Bienvenido/a. ");
 		while (ask) {
+			
 			System.out.println("¿Qué desea hacer?\n"
-					+ "1. Crear una floristería\n"
+					+ "1. Borrar esta floristería y crear otra\n"
 					+ "2. Añadir un producto\n"
 					+ "3. Retirar un producto\n"
 					+ "4. Ver productos\n"
@@ -36,9 +46,8 @@ public class FloristApp {
 			int num = selectNumericOption(sc, 1, 10);
 
 			switch(num) {
-				
 				case 1:
-					createFlorist(sc);
+					rewriteFlorist(sc);
 					break;
 				case 2:
 					selectProduct("añadir");
@@ -99,9 +108,21 @@ public class FloristApp {
 				" se ha creado correctamente.");
 			} else {
 				System.out.println("No se ha podido crear la floristería " 
-				+ name + ".\nYa existe la floristería " 
-				+ new FloristController().getFloristName());
+				+ name + ".\nYa ha creado una floristería"); 
 			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public static void rewriteFlorist(Scanner sc) {
+		System.out.println("Escriba el nombre de la nueva floristería");
+		String name = sc.nextLine();
+		boolean newFlorist;
+		try {
+			newFlorist = new FloristController().createFlorist(name);
+			System.out.println("La floristería " + name + 
+				" se ha creado correctamente.");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
