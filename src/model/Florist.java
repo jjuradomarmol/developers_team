@@ -8,7 +8,7 @@ public class Florist implements Serializable {
 
 	private static Florist instance;
 	
-	private static String name;
+	private String name;
 	
 	private Stock stock;
 	
@@ -30,12 +30,12 @@ public class Florist implements Serializable {
 		instance = florist;
 	}
 
-	public static String getName() {
-		return name;
+	public String getName() {
+		return this.name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setName(String newName) {
+		this.name = newName;
 	}
 
 	public Stock getStock() {

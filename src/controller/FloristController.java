@@ -6,12 +6,11 @@ import model.RepositoryException;
 
 public class FloristController {
 	
-	public boolean createFlorist(String name)
+	public void createFlorist(String name)
 		throws IOException, RepositoryException {
 			Florist.getInstance().setName(name);
 			Florist.getInstance().resetFlorist();
 			RepositoryFactory.getRepository().addFlorist(Florist.getInstance());
-			return true;
 	}
 	
 	public String getFloristName() {

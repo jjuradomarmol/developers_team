@@ -20,15 +20,9 @@ public class FloristApp {
 		Scanner sc = new Scanner(System.in);
 		boolean ask = true;
 		
-		
-		Florist florist = RepositoryFactory.getRepository().findFlorist();
-		if (florist == null) {
-			createFlorist(sc);
-		} else {
-			Florist.setInstance(florist);
-		}
+		checkFlorist(sc);
 
-		System.out.print("Bienvenido/a. ");
+		System.out.print("Bienvenido/a al menú de la floristería '" + Florist.getInstance().getName() + "'.\n\n");
 		while (ask) {
 			
 			System.out.println("¿Qué desea hacer?\n"
@@ -95,37 +89,33 @@ public class FloristApp {
 		System.out.println("¡Hasta pronto!");
 		sc.close();
 	}
+	
+	public static void checkFlorist(Scanner sc) throws IOException, RepositoryException {
+		Florist florist = RepositoryFactory.getRepository().findFlorist();
+		if (florist == null) {
+			createFlorist(sc);
+		} else {
+			Florist.setInstance(florist);
+			Florist.getInstance().setName(florist.getName());
+		}
+	};
 
-	private static void createFlorist(Scanner sc) throws IOException {
+	private static void createFlorist(Scanner sc) throws IOException, RepositoryException {
 		System.out.println("Escriba el nombre de la floristería "
 				+ "que desea crear:");
 		String name = sc.nextLine();
-		boolean newFlorist;
-		try {
-			newFlorist = new FloristController().createFlorist(name);
-			if (newFlorist) {
-			System.out.println("La floristería " + name + 
-				" se ha creado correctamente.");
-			} else {
-				System.out.println("No se ha podido crear la floristería " 
-				+ name + ".\nYa ha creado una floristería"); 
-			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
+		new FloristController().createFlorist(name);
+		System.out.println("La floristería " + name + 
+			" se ha creado correctamente.\n\n");
 	}
 	
-	public static void rewriteFlorist(Scanner sc) {
+	public static void rewriteFlorist(Scanner sc) throws IOException, RepositoryException {
 		System.out.println("Escriba el nombre de la nueva floristería");
 		String name = sc.nextLine();
-		boolean newFlorist;
-		try {
-			newFlorist = new FloristController().createFlorist(name);
-			System.out.println("La floristería " + name + 
-				" se ha creado correctamente.");
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
+		new FloristController().createFlorist(name);
+		System.out.println("La floristería " + name + 
+			" se ha creado correctamente.");
+		
 	}
 	
 	private static void selectProduct(String operation) {
