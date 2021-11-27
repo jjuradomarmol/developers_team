@@ -1,25 +1,33 @@
 package controller;
 
-import java.io.IOException;
 import model.Florist;
 import model.RepositoryException;
 
 public class FloristController {
 	
-	public boolean createFlorist(String name)
-		throws IOException, RepositoryException {
+	public boolean loadFlorist() {
 		try {
 			Florist florist = RepositoryFactory.getRepository().findFlorist();
 			Florist.setInstance(florist);
-			return false;			
-		} catch (Exception e) {
-			Florist.getInstance().setName(name);
-			RepositoryFactory.getRepository().addFlorist(Florist.getInstance());
-			return true;
+			return true;			
+		} catch (RepositoryException e) {
+			return false;
 		}
+	}
+	
+	public void createFlorist(String name) throws RepositoryException {
+		Florist.getInstance().setName(name);
+		RepositoryFactory.getRepository().addFlorist(Florist.getInstance());
+	}
+	
+	public void deleteFlorist() throws RepositoryException {
+		RepositoryFactory.getRepository().deleteFlorist();
+		Florist.getInstance().emptyFlorist();
 	}
 	
 	public String getFloristName() {
 		return Florist.getInstance().getName();
 	}
+
+	
 }

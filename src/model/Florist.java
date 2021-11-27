@@ -26,6 +26,11 @@ public class Florist implements Serializable {
 		return instance;
 	}
 	
+	public void emptyFlorist() {
+		this.stock = new Stock();
+		this.ticketCollection = new TicketCollection();
+	}
+	
 	public static void setInstance(Florist florist) {
 		instance = florist;
 	}

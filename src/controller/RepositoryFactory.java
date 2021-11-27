@@ -1,7 +1,5 @@
 package controller;
 
-import model.RepositoryInterface;
-
 public class RepositoryFactory {
 	
 	private static RepositoryInterface repository;

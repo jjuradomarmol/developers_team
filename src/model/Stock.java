@@ -136,7 +136,7 @@ public class Stock implements Serializable {
 		for (Flower flower : flowerStock) {
 			totalArrays += "\t\t" + flower.toString() + "\n";
 		}
-		totalArrays += "\n\tDecoraciones:\n";
+		totalArrays += "\n\tAdornos:\n";
 		for (Ornament ornament : ornamentStock) {
 			totalArrays += "\t\t" + ornament.toString() + "\n";
 		}

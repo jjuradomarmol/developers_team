@@ -9,7 +9,6 @@ import java.io.ObjectOutputStream;
 import model.Florist;
 import model.Product;
 import model.RepositoryException;
-import model.RepositoryInterface;
 import model.Ticket;
 
 public class TxtRepository implements RepositoryInterface {
@@ -87,6 +86,16 @@ public class TxtRepository implements RepositoryInterface {
 		oos.writeObject(florist);
 		oos.flush();
 		oos.close();
+	}
+
+	@Override
+	public void deleteFlorist() throws RepositoryException {
+		try {
+			new FileOutputStream("SaveObj.sav").close();
+		} catch (Exception e) {
+			throw new RepositoryException("Ha ocurrido un error "
+				+ "al intentar limpiar la base de datos."); 
+		}
 	}
 
 }

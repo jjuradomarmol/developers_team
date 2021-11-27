@@ -1,4 +1,9 @@
-package model;
+package controller;
+
+import model.Florist;
+import model.Product;
+import model.RepositoryException;
+import model.Ticket;
 
 public interface RepositoryInterface {
 	
@@ -13,5 +18,7 @@ public interface RepositoryInterface {
 	void deleteProduct(Product product) throws RepositoryException;
 	
 	void addTicket(Ticket ticket) throws RepositoryException;
+
+	void deleteFlorist() throws RepositoryException;
 
 }

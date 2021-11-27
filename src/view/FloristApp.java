@@ -1,7 +1,5 @@
 package view;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import controller.*;
@@ -10,19 +8,25 @@ import model.RepositoryException;
 
 public class FloristApp {
 
-	public static void main(String[] args) throws IOException {
-		
-		RepositoryFactory.selectRepository("txt");
-		//RepositoryFactory.selectRepository("mySQL");
-		//RepositoryFactory.selectRepository("mongoDB");
+	public static void main(String[] args) {
 		
 		Scanner sc = new Scanner(System.in);
 		boolean ask = true;
-
-		System.out.print("Bienvenido/a. ");
+		selectRepository(sc);
+		boolean loaded = loadFlorist();
+		if (!loaded) {
+			try {
+				createFlorist(sc);
+			} catch (RepositoryException e) {
+				System.out.println("No se ha podido crear una floristería. "
+						+ "El programa se cerrará.");
+				ask = false;
+			}
+		}
+		
 		while (ask) {
 			System.out.println("¿Qué desea hacer?\n"
-					+ "1. Crear una floristería\n"
+					+ "1. Borrar esta floristería y crear una nueva\n"
 					+ "2. Añadir un producto\n"
 					+ "3. Retirar un producto\n"
 					+ "4. Ver productos\n"
@@ -38,7 +42,7 @@ public class FloristApp {
 			switch(num) {
 				
 				case 1:
-					createFlorist(sc);
+					ask = restartFlorist(sc);
 					break;
 				case 2:
 					selectProduct("añadir");
@@ -87,23 +91,54 @@ public class FloristApp {
 		sc.close();
 	}
 
-	private static void createFlorist(Scanner sc) throws IOException {
-		System.out.println("Escriba el nombre de la floristería "
-				+ "que desea crear:");
-		String name = sc.nextLine();
-		boolean newFlorist;
+	private static void selectRepository(Scanner sc) {
+		System.out.println("Bienvenido/a. Para empezar, "
+				+ "seleccione la base de datos que desea utilizar.\n"
+				+ "1. Txt\n"
+				+ "2. MySQL\n"
+				+ "3. MongoDB");
+		
+		switch(selectNumericOption(sc, 1, 3)) {
+			case 1:
+				RepositoryFactory.selectRepository("txt");
+				break;
+			case 2:
+				RepositoryFactory.selectRepository("mySQL");
+				break;
+			case 3:
+				RepositoryFactory.selectRepository("mongoDB");
+				break;
+		}
+	}
+	
+	private static boolean loadFlorist() {
+		if (new FloristController().loadFlorist()) {
+			System.out.println("Ha accedido a la floristería " 
+				+ new FloristController().getFloristName() + ".");
+			return true;
+		} else {
+			System.out.println("No hemos encontrado ninguna floristería "
+				+ "en la base de datos seleccionada." );
+			return false;
+		}
+	}
+
+	private static void createFlorist(Scanner sc) throws RepositoryException {
+		String name = CheckInput.getFloristName(sc);
+		new FloristController().createFlorist(name);
+		System.out.println("La floristería " + name + 
+			" se ha creado correctamente.");
+	}
+	
+	private static boolean restartFlorist(Scanner sc) {
 		try {
-			newFlorist = new FloristController().createFlorist(name);
-			if (newFlorist) {
-			System.out.println("La floristería " + name + 
-				" se ha creado correctamente.");
-			} else {
-				System.out.println("No se ha podido crear la floristería " 
-				+ name + ".\nYa existe la floristería " 
-				+ new FloristController().getFloristName());
-			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			new FloristController().deleteFlorist();
+			createFlorist(sc);
+			return true;
+		} catch (RepositoryException e) {
+			System.out.println("No se ha podido crear una floristería. "
+					+ "El programa se cerrará.");
+			return false;
 		}
 	}
 	
@@ -115,24 +150,23 @@ public class FloristApp {
 				+ "3. Adorno");
 	}
 	
-	private static void setProduct(Scanner sc, int option) 
-		throws FileNotFoundException, IOException {
-		String name = SetProductView.getProductName(sc);
-		double price = SetProductView.getProductPrice(sc);
+	private static void setProduct(Scanner sc, int option) {
+		String name = CheckInput.getProductName(sc);
+		double price = CheckInput.getProductPrice(sc);
 		Double height = null;
 		String color = null, material = null;
 		switch (option) {
 			case 1:
-				height = SetProductView.getProductHeight(sc);
+				height = CheckInput.getProductHeight(sc);
 				break;
 			case 2:
-				color = SetProductView.getProductColor(sc);
+				color = CheckInput.getProductColor(sc);
 				break;
 			case 3:
-				material = SetProductView.getProductMaterial(sc);
+				material = CheckInput.getProductMaterial(sc);
 				break;
 		}
-		int quantity = SetProductView.getQuantityToAdd(sc, 1, 500);
+		int quantity = CheckInput.getQuantityToAdd(sc, 1, 500);
 		try {
 			int index = new ProductController()
 				.getIndex(name, price, height, color, material, quantity);

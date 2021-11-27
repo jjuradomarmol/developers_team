@@ -2,7 +2,6 @@ package controller;
 
 import model.Florist;
 import model.Product;
-import model.RepositoryInterface;
 import model.Ticket;
 
 public class MySQLRepository implements RepositoryInterface {
@@ -41,6 +40,12 @@ public class MySQLRepository implements RepositoryInterface {
 	public void addTicket(Ticket ticket) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void deleteFlorist() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
