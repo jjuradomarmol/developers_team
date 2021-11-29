@@ -29,31 +29,13 @@ public class MongoDBRepository implements RepositoryInterface {
 	
 	public MongoDBRepository() {
 		this.mongoClient = MongoClients.create("mongodb://localhost:27017");
-		//setMongoClient();
 		this.database = mongoClient.getDatabase("Florist");
 		this.floristName = database.getCollection("floristName");
 		this.trees = database.getCollection("trees");
 		this.flowers = database.getCollection("flowers");
 		this.ornaments = database.getCollection("ornaments");
-		this.tickets = database.getCollection("tickets"/*, Ticket.class*/);
+		this.tickets = database.getCollection("tickets");
 	}
-	
-	/*private void setMongoClient() {
-		ConnectionString connectionString =
-				new ConnectionString("mongodb://localhost:27017");
-		CodecRegistry pojoCodecRegistry = CodecRegistries
-			.fromProviders(PojoCodecProvider.builder().automatic(true).build());
-		CodecRegistry codecRegistry = CodecRegistries
-				.fromRegistries(
-					MongoClientSettings.getDefaultCodecRegistry(), 
-					pojoCodecRegistry
-				);
-		MongoClientSettings clientSettings = MongoClientSettings.builder()
-                .applyConnectionString(connectionString)
-                .codecRegistry(codecRegistry)
-                .build();
-		this.mongoClient = MongoClients.create(clientSettings);
-	}*/
 
 	public Florist findFlorist() throws RepositoryException {
 		Florist florist = Florist.getInstance();
