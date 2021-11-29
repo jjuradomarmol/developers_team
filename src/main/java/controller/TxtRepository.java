@@ -9,12 +9,10 @@ import java.io.ObjectOutputStream;
 import model.Florist;
 import model.Product;
 import model.RepositoryException;
-import model.RepositoryInterface;
 import model.Ticket;
 
 public class TxtRepository implements RepositoryInterface {
 
-	@Override
 	public Florist findFlorist() throws RepositoryException {
 		try {
 			File f = new File("./src/database.txt");
@@ -29,7 +27,6 @@ public class TxtRepository implements RepositoryInterface {
 		}
 	}
 
-	@Override
 	public void addFlorist(Florist florist) throws RepositoryException {
 		try {
 			writeFlorist();
@@ -39,7 +36,6 @@ public class TxtRepository implements RepositoryInterface {
 		}
 	}
 
-	@Override
 	public void addProduct(Product product) throws RepositoryException {
 		try {
 			writeFlorist();
@@ -49,7 +45,6 @@ public class TxtRepository implements RepositoryInterface {
 		}
 	}
 
-	@Override
 	public void updateProduct(Product product) throws RepositoryException {
 		try {
 			writeFlorist();
@@ -59,7 +54,6 @@ public class TxtRepository implements RepositoryInterface {
 		}
 	}
 
-	@Override
 	public void deleteProduct(Product product) throws RepositoryException {
 		try {
 			writeFlorist();
@@ -69,7 +63,6 @@ public class TxtRepository implements RepositoryInterface {
 		}
 	}
 
-	@Override
 	public void addTicket(Ticket ticket) throws RepositoryException {
 		try {
 			writeFlorist();
@@ -87,6 +80,15 @@ public class TxtRepository implements RepositoryInterface {
 		oos.writeObject(florist);
 		oos.flush();
 		oos.close();
+	}
+
+	public void deleteFlorist() throws RepositoryException {
+		try {
+			new FileOutputStream("./src/database.txt").close();
+		} catch (Exception e) {
+			throw new RepositoryException("Ha ocurrido un error "
+				+ "al intentar limpiar la base de datos."); 
+		}
 	}
 
 }

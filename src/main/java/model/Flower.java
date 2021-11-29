@@ -13,6 +13,17 @@ public class Flower extends Product implements Serializable {
 		this.color = color;
 	}
 
+	public Flower(
+		String id, 
+		String name, 
+		double price, 
+		String color, 
+		int quantity
+	) {
+		super(id, name, price, quantity);
+		this.color = color;
+	}
+
 	public String getColor() {
 		return color;
 	}

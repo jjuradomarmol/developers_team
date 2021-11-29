@@ -18,7 +18,18 @@ public class Ornament extends Product implements Serializable  {
 		this.checkMaterial(material);
 		this.material = material;
 	}
-	
+
+	public Ornament(
+		String id, 
+		String name, 
+		double price, 
+		String material, 
+		int quantity
+	) {
+		super(id, name, price, quantity);
+		this.material = material;
+	}
+
 	private void checkMaterial(String material) throws MaterialTypeException {
 		if ((!material.equalsIgnoreCase("madera"))
 				&&(!material.equalsIgnoreCase("plástico"))) {

@@ -4,17 +4,32 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import model.MaterialTypeException;
 
-public class SetProductView {
+public class CheckInput {
+	
+	protected static String getFloristName(Scanner sc) {
+		System.out.println("Escriba el nombre de la nueva floristería:");
+		try {
+			String name = sc.nextLine();
+			if (stringIsValid(name)) {
+				return name;
+			}
+			throw new InputMismatchException("El nombre no puede "
+				+ "incluir números o estar vacío.");
+		} catch (InputMismatchException e) {
+			System.out.println(e.getMessage());
+			return getFloristName(sc);
+		}
+	}
 	
 	protected static String getProductName(Scanner sc) {
 		System.out.println("Introduzca el nombre:");
 		try {
 			String name = sc.nextLine();
-			if (onlyHasLetters(name)) {
+			if (stringIsValid(name)) {
 				return name;
 			}
-			throw new InputMismatchException("El nombre no puede incluir "
-				+ "números o carácteres especiales");
+			throw new InputMismatchException("El nombre no puede "
+				+ "incluir números o estar vacío.");
 		} catch (InputMismatchException e) {
 			System.out.println(e.getMessage());
 			return getProductName(sc);
@@ -60,11 +75,11 @@ public class SetProductView {
 		System.out.println("Introduzca el color:");
 		try {
 			String color = sc.nextLine().toLowerCase();
-			if (onlyHasLetters(color)) {
+			if (stringIsValid(color)) {
 				return color;
 			}
 			throw new InputMismatchException("El color introducido "
-				+ "no es válido");
+				+ "no es válido. No puede incluir números o estar vacío.");
 		} catch (InputMismatchException e) {
 			System.out.println(e.getMessage());
 			return getProductColor(sc);
@@ -75,7 +90,7 @@ public class SetProductView {
 		System.out.println("Introduzca el material (madera/plástico):");
 		try {
 			String material = sc.nextLine().toLowerCase();
-			if (!onlyHasLetters(material)) {
+			if (!stringIsValid(material)) {
 				throw new InputMismatchException("El material introducido "
 				+ "no es válido");
 			}
@@ -116,11 +131,14 @@ public class SetProductView {
 		return getQuantityToAdd(sc, min, max);
 	}
 	
-	public static boolean onlyHasLetters(String s) {
+	public static boolean stringIsValid(String s) {
 	    char[] string = s.toCharArray();
 	    for(char c : string) {
-	        if (!Character.isLetter(c))
+	        if (Character.isDigit(c))
 	            return false;
+	    }
+	    if (s.trim().equals("")) {
+	    	return false;
 	    }
 	    return true;
 	}

@@ -12,6 +12,17 @@ public class Tree extends Product implements Serializable {
 		super(name, price, quantity);
 		this.height = height;
 	}
+	
+	public Tree(
+		String id, 
+		String name, 
+		double price, 
+		Double height, 
+		int quantity
+	) {
+		super(id, name, price, quantity);
+		this.height = height;
+	}
 
 	public Double getHeight() {
 		return height;
