@@ -9,12 +9,6 @@ import model.Ticket;
 import model.Tree;
 
 import org.bson.Document;
-import org.bson.codecs.configuration.CodecRegistries;
-import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.PojoCodecProvider;
-
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -31,19 +25,20 @@ public class MongoDBRepository implements RepositoryInterface {
 	private MongoCollection trees;
 	private MongoCollection flowers;
 	private MongoCollection ornaments;
-	private MongoCollection<Ticket> tickets;
+	private MongoCollection tickets;
 	
 	public MongoDBRepository() {
-		setMongoClient();
+		this.mongoClient = MongoClients.create("mongodb://localhost:27017");
+		//setMongoClient();
 		this.database = mongoClient.getDatabase("Florist");
 		this.floristName = database.getCollection("floristName");
 		this.trees = database.getCollection("trees");
 		this.flowers = database.getCollection("flowers");
 		this.ornaments = database.getCollection("ornaments");
-		this.tickets = database.getCollection("tickets", Ticket.class);
+		this.tickets = database.getCollection("tickets"/*, Ticket.class*/);
 	}
 	
-	private void setMongoClient() {
+	/*private void setMongoClient() {
 		ConnectionString connectionString =
 				new ConnectionString("mongodb://localhost:27017");
 		CodecRegistry pojoCodecRegistry = CodecRegistries
@@ -58,7 +53,7 @@ public class MongoDBRepository implements RepositoryInterface {
                 .codecRegistry(codecRegistry)
                 .build();
 		this.mongoClient = MongoClients.create(clientSettings);
-	}
+	}*/
 
 	public Florist findFlorist() throws RepositoryException {
 		Florist florist = Florist.getInstance();
@@ -108,11 +103,34 @@ public class MongoDBRepository implements RepositoryInterface {
 				florist.getStock().addOrnament(ornament);
 			}
 			
-			MongoCursor<Ticket> itTicket = this.tickets.find().cursor();
-			while (itTicket.hasNext()) {
-				Ticket ticket = itTicket.next();
-				florist.getTicketCollection().addToTickets(ticket);
-			}			
+			it = this.tickets.find().iterator();
+			while (it.hasNext()) {
+				Ticket ticket = new Ticket();
+				document = it.next();
+				for (int i = 0; i < (Integer)document.get("size"); i++) {
+					Document productDoc = (Document)((Document) document
+						.get("purchasedProducts")).get(Integer.toString(i));
+					Product product = null;
+					String id = (String)productDoc.get("_id");
+					String name = (String)productDoc.get("name");
+					double price = (Double)productDoc.get("price");
+					int quantity = (Integer)productDoc.get("quantity");
+					
+					if ((Double)productDoc.get("height") != null) {
+						Double height = (Double)productDoc.get("height");
+						product = new Tree(id, name, price, height, quantity);
+					} else if ((String)productDoc.get("color") != null) {
+						String color = (String)productDoc.get("color");
+						product = new Flower(id, name, price, color, quantity);
+					} else if ((String)productDoc.get("material") != null) {
+						String material = (String)productDoc.get("material");
+						product =
+							new Ornament(id, name, price, material, quantity);
+					}
+					ticket.addToPurchasedProducts(product);
+				}
+				florist.getTicketCollection().addToTickets(ticket);	
+			}
 		}
 		return florist;
 	}
@@ -175,7 +193,28 @@ public class MongoDBRepository implements RepositoryInterface {
 	}
 
 	public void addTicket(Ticket ticket) {
-        this.tickets.insertOne(ticket);
+		Document list = new Document();
+		Document bought = new Document();
+		int i = 0;
+		for (Product product : ticket.getPurchasedProducts()) {
+			Document productDoc = new Document();  
+	        productDoc.put("_id", product.getId());
+	        productDoc.put("name", product.getName());
+	        productDoc.put("price", product.getPrice());
+	        productDoc.put("quantity", product.getQuantity());
+			if (product instanceof Tree) {
+		        productDoc.put("height", ((Tree)product).getHeight());
+			} else if (product instanceof Flower) {
+		        productDoc.put("color", ((Flower)product).getColor());
+			} else if (product instanceof Ornament) {
+		        productDoc.put("material", ((Ornament)product).getMaterial());
+			}
+			bought.append(Integer.toString(i), productDoc);
+			i++;
+		}
+		list.append("purchasedProducts", bought);
+		list.append("size", ticket.getPurchasedProducts().size());
+		this.tickets.insertOne(list);
 	}
 
 	public void deleteFlorist() {
