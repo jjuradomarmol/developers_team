@@ -32,7 +32,7 @@ public class TicketController {
 				.getProductCopy(quantityToBuy);
 		} else {
 			throw new ProductTypeException(
-				"No se ha podido añadir el producto al ticket de compra."
+				"No se ha podido aÃ±adir el producto al ticket de compra."
 			);
 		}
 		ticket.addToPurchasedProducts(product);

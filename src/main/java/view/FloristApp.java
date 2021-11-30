@@ -131,15 +131,23 @@ public class FloristApp {
 	}
 	
 	private static boolean restartFlorist(Scanner sc) {
-		try {
-			new FloristController().deleteFlorist();
-			createFlorist(sc);
-			return true;
-		} catch (RepositoryException e) {
-			System.out.println("No se ha podido crear una floristería. "
-					+ "El programa se cerrará.");
-			return false;
+		System.out.println("¿Está seguro de que desea borrar esta floristería y crear otra? "
+				+ "(sí/no)");
+		boolean created = false;
+		String answer = sc.next();
+		
+		if (answer.equalsIgnoreCase("sí")) {
+			try {
+				new FloristController().deleteFlorist();
+				createFlorist(sc);
+				created = true;
+			} catch (RepositoryException e) {
+				System.out.println("No se ha podido crear una floristería. "
+						+ "El programa se cerrará.");
+			}
 		}
+		
+		return created;
 	}
 	
 	private static void selectProduct(String operation) {
