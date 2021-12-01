@@ -11,7 +11,7 @@ public class StockController {
 	
 	public String showStockQuantity() {
 		Stock stock = Florist.getInstance().getStock();
-		return "¡rboles: " + stock.getTreeStock().size() + "\n"
+		return "√Årboles: " + stock.getTreeStock().size() + "\n"
 			+ "Flores: " + stock.getFlowerStock().size() + "\n"
 			+ "Adornos: " + stock.getOrnamentStock().size();
 	}

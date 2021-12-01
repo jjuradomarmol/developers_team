@@ -32,11 +32,11 @@ public class Ornament extends Product implements Serializable  {
 
 	private void checkMaterial(String material) throws MaterialTypeException {
 		if ((!material.equalsIgnoreCase("madera"))
-				&&(!material.equalsIgnoreCase("pl·stico"))) {
+				&&(!material.equalsIgnoreCase("pl√°stico"))) {
 			throw new MaterialTypeException(
-				"El material " + material + " no es v·lido.\n"
+				"El material " + material + " no es v√°lido.\n"
 				+ "Vuelva a introducir los datos del producto "
-				+ "con un material v·lido (madera/pl·stico)."
+				+ "con un material v√°lido (madera/pl√°stico)."
 			);
 		}		
 	}
@@ -52,7 +52,7 @@ public class Ornament extends Product implements Serializable  {
 	@Override
 	public String toString() {
 		return this.getName() + " || precio: " + this.getPrice() + 
-			"Ä || material: " + this.getMaterial() + " || cantidad: " 
+			"‚Ç¨ || material: " + this.getMaterial() + " || cantidad: " 
 			+ this.getQuantity();
 	}
 	

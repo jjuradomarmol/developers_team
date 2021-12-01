@@ -34,7 +34,7 @@ public class TicketCollection implements Serializable {
 		String result = "Lista de tickets: ";
 		int i = 1;
 		for (Ticket ticket : this.tickets) {
-			result += "\n\tTicket nº " + i + ":\n";
+			result += "\n\tTicket nÂº " + i + ":\n";
 			result += ticket.toString();
 			i++;
 		}

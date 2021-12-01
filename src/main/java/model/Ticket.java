@@ -36,10 +36,10 @@ public class Ticket implements Serializable {
 			ticketToPrint += "\t\tProducto: " + 
 			product.getName() + ", cantidad: " +
 			product.getQuantity() + ", precio por unidad: " +
-			product.getPrice() + "€, total: " + 
-			product.getPrice() * product.getQuantity() + "€.\n";
+			product.getPrice() + "â‚¬, total: " + 
+			product.getPrice() * product.getQuantity() + "â‚¬.\n";
 		}
-		ticketToPrint += "\t\tTotal: " + this.getTotalTicket() + "€.\n";
+		ticketToPrint += "\t\tTotal: " + this.getTotalTicket() + "â‚¬.\n";
 		return ticketToPrint;
 	}
 }

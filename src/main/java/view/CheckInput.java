@@ -7,14 +7,14 @@ import model.MaterialTypeException;
 public class CheckInput {
 	
 	protected static String getFloristName(Scanner sc) {
-		System.out.println("Escriba el nombre de la nueva floristería:");
+		System.out.println("Escriba el nombre de la nueva floristerÃ­a:");
 		try {
 			String name = sc.nextLine();
 			if (stringIsValid(name)) {
 				return name;
 			}
 			throw new InputMismatchException("El nombre no puede "
-				+ "incluir números o estar vacío.");
+				+ "incluir nÃºmeros o estar vacÃ­o.");
 		} catch (InputMismatchException e) {
 			System.out.println(e.getMessage());
 			return getFloristName(sc);
@@ -29,7 +29,7 @@ public class CheckInput {
 				return name;
 			}
 			throw new InputMismatchException("El nombre no puede "
-				+ "incluir números o estar vacío.");
+				+ "incluir nÃºmeros o estar vacÃ­o.");
 		} catch (InputMismatchException e) {
 			System.out.println(e.getMessage());
 			return getProductName(sc);
@@ -45,8 +45,8 @@ public class CheckInput {
 			}
 			return price;
 		} catch (NumberFormatException e) {
-			System.out.println("No ha introducido un número."
-					+ " Introduzca un número válido:");
+			System.out.println("No ha introducido un nÃºmero."
+					+ " Introduzca un nÃºmero vÃ¡lido:");
 		} catch (InputMismatchException e) {
 			System.out.println("Ha introducido un precio demasiado bajo"
 				+ " o demasiado alto.");
@@ -63,10 +63,10 @@ public class CheckInput {
 			}
 			return height;
 		} catch (NumberFormatException e) {
-			System.out.println("No ha introducido un número."
-					+ " Introduzca un número válido:");
+			System.out.println("No ha introducido un nÃºmero."
+					+ " Introduzca un nÃºmero vÃ¡lido:");
 		} catch (InputMismatchException e) {
-			System.out.println("Un árbol no puede ser tan bajo/alto");
+			System.out.println("Un Ã¡rbol no puede ser tan bajo/alto");
 		}
 		return getProductHeight(sc);
 	}
@@ -79,7 +79,7 @@ public class CheckInput {
 				return color;
 			}
 			throw new InputMismatchException("El color introducido "
-				+ "no es válido. No puede incluir números o estar vacío.");
+				+ "no es vÃ¡lido. No puede incluir nÃºmeros o estar vacÃ­o.");
 		} catch (InputMismatchException e) {
 			System.out.println(e.getMessage());
 			return getProductColor(sc);
@@ -87,18 +87,18 @@ public class CheckInput {
 	}
 	
 	protected static String getProductMaterial(Scanner sc) {
-		System.out.println("Introduzca el material (madera/plástico):");
+		System.out.println("Introduzca el material (madera/plÃ¡stico):");
 		try {
 			String material = sc.nextLine().toLowerCase();
 			if (!stringIsValid(material)) {
 				throw new InputMismatchException("El material introducido "
-				+ "no es válido");
+				+ "no es vÃ¡lido");
 			}
 			if ((!material.equalsIgnoreCase("madera"))
-				&&(!material.equalsIgnoreCase("plástico"))) {
+				&&(!material.equalsIgnoreCase("plÃ¡stico"))) {
 				throw new MaterialTypeException(
-					"El material " + material + " no es válido.\n"
-					+ "Introduzca un material válido (madera/plástico)."
+					"El material " + material + " no es vÃ¡lido.\n"
+					+ "Introduzca un material vÃ¡lido (madera/plÃ¡stico)."
 				);
 			}
 			return material;
@@ -111,20 +111,20 @@ public class CheckInput {
 	}
 	
 	public static int getQuantityToAdd(Scanner sc, int min, int max) {
-		System.out.println("¿Cuántos productos de este tipo desea añadir?");
+		System.out.println("Â¿CuÃ¡ntos productos de este tipo desea aÃ±adir?");
 		try {
 			int quantity = Integer.parseInt(sc.nextLine());
 			if (min > quantity) {
 				throw new NumberException("Introduzca al menos " + min +":");
 			} else if (quantity >= max) {
-				throw new NumberException("Ha intentado añadir demasiados"
-						+ " productos.\nNo se pueden añadir más de " + max 
+				throw new NumberException("Ha intentado aÃ±adir demasiados"
+						+ " productos.\nNo se pueden aÃ±adir mÃ¡s de " + max 
 						+ " productos iguales de una vez.");
 			}
 			return quantity;
 		} catch (NumberFormatException e) {
-			System.out.println("No ha introducido un número."
-					+ " Introduzca un número válido:");
+			System.out.println("No ha introducido un nÃºmero."
+					+ " Introduzca un nÃºmero vÃ¡lido:");
 		} catch (NumberException e) {
 			System.out.println(e.getMessage());
 		}

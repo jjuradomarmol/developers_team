@@ -10,6 +10,7 @@ import model.Flower;
 import model.MaterialTypeException;
 import model.Ornament;
 import model.Product;
+import model.ProductTypeException;
 import model.RepositoryException;
 import model.Ticket;
 import model.Tree;
@@ -79,6 +80,7 @@ public class MySQLRepository implements RepositoryInterface {
 				florist = Florist.getInstance();
 				florist.setName(name);
 				getProducts();
+				getTickets();
 			}
 			
 		} catch (Exception e) {
@@ -112,9 +114,9 @@ public class MySQLRepository implements RepositoryInterface {
 		try {
 			while (trees.next()) {
 				String name = trees.getString("name");
-				double price = trees.getFloat("price");
-				price = (float) (Math.round(price * 1000.0) / 1000.0);
-				double height = trees.getFloat("height");
+				double price = trees.getDouble("price");
+				price = (Double) (Math.round(price * 1000.0) / 1000.0);
+				double height = trees.getDouble("height");
 				height = Math.round(height * 1000.00) / 1000.00;
 				int quantity = trees.getInt("quantity");
 				
@@ -131,7 +133,7 @@ public class MySQLRepository implements RepositoryInterface {
 		try {
 			while (flowers.next()) {
 				String name = flowers.getString("name");
-				double price = flowers.getFloat("price");
+				double price = flowers.getDouble("price");
 				price = (Math.round(price * 1000.00) / 1000.00);
 				String color = flowers.getString("color");
 				int quantity = flowers.getInt("quantity");
@@ -149,8 +151,8 @@ public class MySQLRepository implements RepositoryInterface {
 		try {
 			while (ornaments.next()) {
 				String name = ornaments.getString("name");
-				double price = ornaments.getFloat("price");
-				price = (float) (Math.round(price * 1000.00) / 1000.00);
+				double price = ornaments.getDouble("price");
+				price = (Double) (Math.round(price * 1000.00) / 1000.00);
 				String material = ornaments.getString("material");
 				int quantity = ornaments.getInt("quantity");
 				
@@ -160,6 +162,42 @@ public class MySQLRepository implements RepositoryInterface {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public int getIdProduct(Product product) {
+		int id = 0;
+		
+		String sql = "";
+		
+		if (product instanceof Tree) {
+			Tree tree = (Tree) product;
+			sql = "SELECT id FROM trees WHERE name='" + tree.getName() + 
+					"' AND ROUND(price, 2)=ROUND(" + tree.getPrice() + 
+					", 2) AND ROUND(height, 2)=ROUND(" + tree.getHeight() + ", 2)";
+		} else if (product instanceof Flower) {
+			Flower flower = (Flower) product;
+			sql = "SELECT id FROM flowers WHERE name='" + flower.getName() + 
+					"' AND ROUND(price, 2)=ROUND(" + flower.getPrice() + 
+					", 2) AND color='" + flower.getColor() + "'";
+		} else if (product instanceof Ornament) {
+			Ornament ornament = (Ornament) product;
+			sql = "SELECT id FROM ornaments WHERE name='" + ornament.getName() + 
+					"' AND ROUND(price, 2)=ROUND(" + ornament.getPrice() + 
+					", 2) AND material='" + ornament.getMaterial() + "'";
+		}
+		
+		ResultSet rs = getData(sql);
+		
+		try {
+			if (rs.next()) {
+				id = rs.getInt("id");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return id;
 	}
 
 	public void addProduct(Product product) {
@@ -234,7 +272,89 @@ public class MySQLRepository implements RepositoryInterface {
 	}
 
 	public void addTicket(Ticket ticket) {
+		changeTable("INSERT INTO tickets (id) VALUES (0)");
 		
+		ResultSet rs = getData("SELECT * FROM tickets");
+		
+		int id = 0;
+		try {
+			while (rs.next()) {
+				id = rs.getInt("id");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		String sql = "";
+		for (Product product : ticket.getPurchasedProducts()) {
+			if (product instanceof Tree) {
+				Tree tree = (Tree) product;
+				sql = "INSERT INTO tickets_details (ticket_id, category_id, name, price, characteristic, quantity) "
+						+ "VALUES (" + id + ", 1, '" + 
+						tree.getName() + "', " + tree.getPrice() + ", '" + tree.getHeight() + "', " + tree.getQuantity() + ")";
+			} else if (product instanceof Flower) {
+				Flower flower = (Flower) product;
+				sql = "INSERT INTO tickets_details (ticket_id, category_id, name, price, characteristic, quantity) "
+						+ "VALUES (" + id + ", 2, '" + 
+						flower.getName() + "', " + flower.getPrice() + ", '" + flower.getColor() + "', " + flower.getQuantity() + ")";
+			} else if (product instanceof Ornament) {
+				Ornament ornament = (Ornament) product;
+				sql = "INSERT INTO tickets_details (ticket_id, category_id, name, price, characteristic, quantity) "
+						+ "VALUES (" + id + ", 3, '" + 
+						ornament.getName() + "', " + ornament.getPrice() + ", '" + ornament.getMaterial() + "', " + ornament.getQuantity() + ")";
+			}
+			
+			changeTable(sql);
+		}
+	}
+	
+	public void getTickets() throws MaterialTypeException, ProductTypeException {
+		String sql = "SELECT * FROM tickets_details";
+		String name = "", color = "", material = "";
+		double price, height;
+		
+		ResultSet rs = getData(sql);
+		int last = -1, 
+			current = -1,
+			idCategory = -1,
+			quantity = -1;
+		TicketController ticketController = new TicketController();
+		Ticket ticket = null;
+		Product product = null;
+		
+		try {
+			while (rs.next()) {
+				current = rs.getInt("ticket_id");
+				if (current != last) {
+					ticketController.addNewTicket();
+					ticket = Florist.getInstance().getTicketCollection().getLastTicket();
+				}
+				idCategory = rs.getInt("category_id");
+				name = rs.getString("name");
+				price = rs.getDouble("price");
+				quantity = rs.getInt("quantity");
+				
+				if (idCategory == 1) {
+					height = Double.parseDouble(rs.getString("characteristic"));
+					product = new Tree(name, price, height, quantity);
+				} else if (idCategory == 2) {
+					color = rs.getString("characteristic");
+					product = new Flower(name, price, color, quantity);
+				} else if (idCategory == 3) {
+					material = rs.getString("characteristic");
+					product = new Ornament(name, price, material, quantity);
+				}
+				
+				
+				ticket.addToPurchasedProducts(product);
+				
+				last = current;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
