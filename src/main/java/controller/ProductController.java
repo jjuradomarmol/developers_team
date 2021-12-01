@@ -53,8 +53,9 @@ public class ProductController {
 			stock.addOrnament((Ornament) product);
 		} else {
 			throw new ProductTypeException("No se ha podido "
-				+ "añadir el producto");
+				+ "aï¿½adir el producto");
 		}
+		
 		RepositoryFactory.getRepository().addProduct(product);
 	}
 
@@ -138,15 +139,18 @@ public class ProductController {
 		if (product instanceof Tree) {
 			for (Tree tree : stock.getTreeStock()) {
 				if (tree.getName().equalsIgnoreCase(product.getName())
-					&& tree.getPrice() == product.getPrice()
-					&& tree.getHeight() == ((Tree) product).getHeight()) {
+					&& Math.round(tree.getPrice() * 100.0) / 100.0 == 
+						Math.round(product.getPrice() * 100.0) / 100.0
+					&& Math.round(tree.getHeight() * 100.0) / 100.0 == 
+							Math.round(((Tree) product).getHeight() * 100.0) / 100.0) {
 					return stock.getTreeStock().indexOf(tree);
 				}
 			}				
 		} else if (product instanceof Flower) {
 			for (Flower flower : stock.getFlowerStock()) {
 				if (flower.getName().equalsIgnoreCase(product.getName())
-					&& flower.getPrice() == product.getPrice()
+					&& Math.round(flower.getPrice() * 100.0) / 100.0 == 
+							Math.round(product.getPrice() * 100.0) / 100.0
 					&& flower.getColor()
 					.equalsIgnoreCase(((Flower) product).getColor())) {
 					return stock.getFlowerStock().indexOf(flower);
@@ -155,7 +159,8 @@ public class ProductController {
 		} else if (product instanceof Ornament) {
 			for (Ornament ornament : stock.getOrnamentStock()) {
 				if (ornament.getName().equalsIgnoreCase(product.getName())
-					&& ornament.getPrice() == product.getPrice()
+					&& Math.round(ornament.getPrice() * 100.0) / 100.0 == 
+							Math.round(product.getPrice() * 100.0) / 100.0
 					&& ornament.getMaterial()
 					.equalsIgnoreCase(((Ornament) product).getMaterial())) {
 					return stock.getOrnamentStock()

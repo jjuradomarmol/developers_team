@@ -35,7 +35,7 @@ public class Flower extends Product implements Serializable {
 	@Override
 	public String toString() {
 		return this.getName() + " || precio: " + this.getPrice() + 
-			"€ || color: " + this.getColor() + " || cantidad: " 
+			"â‚¬ || color: " + this.getColor() + " || cantidad: " 
 			+ this.getQuantity();
 	}
 	
