@@ -15,7 +15,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 
-
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class MongoDBRepository implements RepositoryInterface {
 	
@@ -41,7 +40,7 @@ public class MongoDBRepository implements RepositoryInterface {
 		Florist florist = Florist.getInstance();
 		MongoCursor<Document> it = this.floristName.find().iterator();
 		if (!it.hasNext()) {
-			throw new RepositoryException("No hay ninguna floristería creada.");
+			throw new RepositoryException("No hay ninguna floristerï¿½a creada.");
 		} else {
 			florist.emptyFlorist();
 			
@@ -117,7 +116,6 @@ public class MongoDBRepository implements RepositoryInterface {
 		return florist;
 	}
 
-	
 	public void addFlorist(Florist florist) {
 		Document floristDoc = new Document();
 		floristDoc.put("name", florist.getName());
@@ -159,7 +157,6 @@ public class MongoDBRepository implements RepositoryInterface {
 		updatedProduct.put("quantity", product.getQuantity());
 
 		collection.updateOne(find, new Document("$set", updatedProduct));
-
 	}
 
 	public void deleteProduct(Product product) {

@@ -118,8 +118,8 @@ public class CheckInput {
 				throw new NumberException("Introduzca al menos " + min +":");
 			} else if (quantity >= max) {
 				throw new NumberException("Ha intentado añadir demasiados"
-						+ " productos.\nNo se pueden añadir más de " + max 
-						+ " productos iguales de una vez.");
+					+ " productos.\nNo se pueden añadir más de " + max 
+					+ " productos iguales de una vez.");
 			}
 			return quantity;
 		} catch (NumberFormatException e) {
@@ -133,12 +133,12 @@ public class CheckInput {
 	
 	public static boolean stringIsValid(String s) {
 	    char[] string = s.toCharArray();
+	    if (s.trim().equals("")) {
+	    	return false;
+	    }
 	    for(char c : string) {
 	        if (Character.isDigit(c))
 	            return false;
-	    }
-	    if (s.trim().equals("")) {
-	    	return false;
 	    }
 	    return true;
 	}
