@@ -16,7 +16,7 @@ public class TicketController {
 	}
 	
 	public void addProductToTicket(int i, int index, int quantityToBuy)
-			throws MaterialTypeException, ProductTypeException {
+		throws MaterialTypeException, ProductTypeException {
 		Stock stock = Florist.getInstance().getStock();
 		Ticket ticket =
 			Florist.getInstance().getTicketCollection().getLastTicket();

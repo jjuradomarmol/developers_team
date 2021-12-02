@@ -52,7 +52,7 @@ public class FloristApp {
 					if (new StockController().checkStockIsEmpty()) {
 						System.out.println("Lo sentimos, "
 							+ "no hay productos disponibles.");
-						return;
+						break;
 					}
 					selectProduct("retirar");
 					selectProductToRemove(sc);
@@ -131,19 +131,19 @@ public class FloristApp {
 	}
 	
 	private static boolean restartFlorist(Scanner sc) {
-		System.out.println("¿Está seguro de que desea borrar esta floristería y crear otra? "
-				+ "(sí/no)");
+		System.out.println("¿Está seguro de que desea borrar esta floristería "
+			+ "y crear otra? (sí/no)");
 		boolean created = false;
-		String answer = sc.next();
+		String answer = sc.nextLine();
 		
-		if (answer.equalsIgnoreCase("sí")) {
+		if (answer.equalsIgnoreCase("sí") || answer.equalsIgnoreCase("si")) {
 			try {
 				new FloristController().deleteFlorist();
 				createFlorist(sc);
 				created = true;
 			} catch (RepositoryException e) {
 				System.out.println("No se ha podido crear una floristería. "
-						+ "El programa se cerrará.");
+					+ "El programa se cerrará.");
 			}
 		}
 		
@@ -264,7 +264,7 @@ public class FloristApp {
 	private static void selectProductToRemove(Scanner sc) {
 		int num = selectNumericOption(sc, 1, 3);
 		ProductListControllerResponse response = 
-				new ProductController().getProductList(num);
+			new ProductController().getProductList(num);
 		if (response.getArrayListSize() == 0) {
 			System.out.println("No hay existencias disponibles.");
 			return;
@@ -308,10 +308,10 @@ public class FloristApp {
 			return num;
 		} catch (NumberFormatException e) {
 			System.out.println("No ha introducido un número."
-					+ " Introduzca un número válido:");
+				+ " Introduzca un número válido:");
 		} catch (InputMismatchException e) {
 			System.out.println("No ha introducido un número válido."
-					+ " Introduzca un número entre " + min + " y " + max + ":");
+				+ " Introduzca un número entre " + min + " y " + max + ":");
 		}
 		return selectNumericOption(sc, min, max);
 	}
