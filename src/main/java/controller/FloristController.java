@@ -6,13 +6,21 @@ import model.RepositoryException;
 public class FloristController {
 	
 	public boolean loadFlorist() {
+		boolean flag;
 		try {
 			Florist florist = RepositoryFactory.getRepository().findFlorist();
-			Florist.setInstance(florist);
-			return true;			
+			
+			if (florist != null) {
+				Florist.setInstance(florist);
+				flag = true;
+			} else {
+				flag = false;
+			}
 		} catch (RepositoryException e) {
-			return false;
+			flag = false;
 		}
+		
+		return flag;
 	}
 	
 	public void createFlorist(String name) throws RepositoryException {
